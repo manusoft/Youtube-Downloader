@@ -1,12 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 
 using VidSync.Contracts.Services;
-using VidSync.Core.Contracts.Services;
-using VidSync.Core.Helpers;
 using VidSync.Helpers;
 using VidSync.Models;
-
-using Windows.ApplicationModel;
 using Windows.Storage;
 
 namespace VidSync.Services;

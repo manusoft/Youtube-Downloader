@@ -1,6 +1,4 @@
-﻿using VidSync.Core.Helpers;
-
-using Windows.Storage;
+﻿using Windows.Storage;
 using Windows.Storage.Streams;
 
 namespace VidSync.Helpers;
