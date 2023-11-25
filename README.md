@@ -55,7 +55,3 @@ This project is licensed under the [MIT License](LICENSE.txt).
 ## Contact
 
 For issues or feature requests, please open an [issue](https://github.com/manusoft/vidsync/issues).
-
----
-
-**Note:** Replace `yourusername` in the contact section with your actual GitHub username.
