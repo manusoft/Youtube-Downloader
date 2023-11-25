@@ -4,8 +4,6 @@ using Microsoft.UI.Xaml;
 
 using VidSync.Activation;
 using VidSync.Contracts.Services;
-using VidSync.Core.Contracts.Services;
-using VidSync.Core.Services;
 using VidSync.Helpers;
 using VidSync.Models;
 using VidSync.Notifications;
@@ -15,21 +13,14 @@ using VidSync.Views;
 
 namespace VidSync;
 
-// To learn more about WinUI 3, see https://docs.microsoft.com/windows/apps/winui/winui3/.
 public partial class App : Application
 {
-    // The .NET Generic Host provides dependency injection, configuration, logging, and other services.
-    // https://docs.microsoft.com/dotnet/core/extensions/generic-host
-    // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
-    // https://docs.microsoft.com/dotnet/core/extensions/configuration
-    // https://docs.microsoft.com/dotnet/core/extensions/logging
-    public IHost Host
-    {
-        get;
-    }
+    public static nint hwnd;
+    public IHost Host { get; }
+    public static WindowEx MainWindow { get; } = new MainWindow();
+    public static UIElement? AppTitlebar { get; set; }
 
-    public static T GetService<T>()
-        where T : class
+    public static T GetService<T>()        where T : class
     {
         if ((App.Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
         {
@@ -38,10 +29,6 @@ public partial class App : Application
 
         return service;
     }
-
-    public static WindowEx MainWindow { get; } = new MainWindow();
-
-    public static UIElement? AppTitlebar { get; set; }
 
     public App()
     {
@@ -89,6 +76,10 @@ public partial class App : Application
     {
         // TODO: Log and handle exceptions as appropriate.
         // https://docs.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.application.unhandledexception.
+        if (!Directory.Exists(@"c:\Logs"))
+            Directory.CreateDirectory(@"c:\Logs");
+
+        File.AppendAllText($"c:\\Logs\\{DateTime.Now.ToString("dd-MM-yyyy")}.log", $"{e.ToString()}\n\n");
     }
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
