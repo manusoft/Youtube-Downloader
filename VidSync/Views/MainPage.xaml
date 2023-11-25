@@ -4,23 +4,176 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
+    xmlns:vm="using:VidSync.ViewModels"
+    xmlns:m="using:VidSync.Models"
     mc:Ignorable="d">
 
-    <Grid x:Name="ContentArea">
+    <Grid x:Name="ContentArea" Padding="0" Margin="0">
+        <Grid.Resources>
+            <ThemeShadow x:Name="BackgroundShadow"/>
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
+            <RowDefinition Height="60" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock
+        <Grid 
             Grid.Row="0"
-            x:Uid="Main_Title"
-            Style="{StaticResource PageTitleStyle}" />
+            Padding="1"
+            Shadow="{StaticResource BackgroundShadow}"
+            Translation="0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1">
-            
+            <StackPanel
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Image
+                    Margin="5"
+                    Source="/Assets/youtube.png"
+                    Height="32"
+                    Width="32"/>
+                <TextBlock Text="VidSync" FontSize="25" FontWeight="Bold" />
+            </StackPanel>
+            <StackPanel
+                Grid.Column="1"
+                VerticalAlignment="Center">
+                <AutoSuggestBox 
+                    x:Name="SearchBox"
+                    PlaceholderText="https://www.youtube.com/watch?v=RIDIBREwWBw" 
+                    HorizontalAlignment="Center" 
+                    Width="500"
+                    QueryIcon="Find"
+                    QuerySubmitted="SearchBox_QuerySubmitted"/>
+            </StackPanel>
+            <StackPanel
+                Grid.Column="2"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <AppBarButton 
+                    Icon="Setting" 
+                    LabelPosition="Collapsed"
+                    Command="{x:Bind ViewModel.GotoSettingsPageCommand}"/>
+            </StackPanel>
         </Grid>
-        
+
+        <Grid 
+            Grid.Row="1"
+            Padding="-5,5,0,0">
+            <ListView
+                x:Name="lstView"
+                SelectionMode="Single"
+                ItemsSource="{x:Bind ViewModel.DownloadItems}"
+                SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="m:DownloadItem">
+                        <Grid
+                            Margin="0,3"
+                            Padding="1"
+                            BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" 
+                            BorderThickness="0.5" 
+                            RowSpacing="0"
+                            ColumnSpacing="5"
+                            Shadow="{StaticResource BackgroundShadow}"
+                            Translation="0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Image 
+                                Grid.RowSpan="2"
+                                Source="{x:Bind Image}"
+                                Stretch="Fill"
+                                Height="50"
+                                Width="75"/>
+                            <TextBlock 
+                                Grid.Column="1"
+                                Text="{x:Bind Title}"
+                                FontWeight="SemiBold" 
+                                Style="{StaticResource BaseTextBlockStyle}"
+                                TextTrimming="CharacterEllipsis"
+                                MaxLines="1"/>
+                            <StackPanel
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Orientation="Horizontal" 
+                                Spacing="5">
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Clock"/>
+                                </Viewbox>                                
+                                <TextBlock Text="{x:Bind Duration}" VerticalAlignment="Center"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Attach"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind FileFormat}" Foreground="Orange" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind FileSize}" VerticalAlignment="Center"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Video"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind VideoInfo}" VerticalAlignment="Center" Foreground="OrangeRed"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Audio"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind AudioCodec}" VerticalAlignment="Center" Foreground="OrangeRed"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Download"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind ProgressText, Mode=OneWay}" VerticalAlignment="Center" Foreground="DeepSkyBlue"/>
+                            </StackPanel>
+                            <StackPanel 
+                                Grid.Column="2"
+                                Grid.RowSpan="2"
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind IsCompleted, Mode=OneWay}">
+                                <Border BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" BorderThickness="1" Width="1" Height="40" />
+                            </StackPanel>
+                            <StackPanel 
+                                Orientation="Horizontal"                                
+                                Grid.Column="3"
+                                Grid.RowSpan="2"
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind IsCompleted, Mode=OneWay}">
+                                <AppBarButton 
+                                    x:Name="ButtonDeleteItem" 
+                                    Icon="Delete" 
+                                    LabelPosition="Collapsed" 
+                                    Width="40" 
+                                    Click="ButtonDeleteItem_Click"/>
+                                <AppBarButton 
+                                    x:Name="ButtonOpenFolder" 
+                                    Icon="OpenLocal" 
+                                    LabelPosition="Collapsed" 
+                                    Width="40" 
+                                    Click="ButtonOpenFolder_Click"/>
+                                <Viewbox Width="16" Height="16" Margin="5,0,10,0">
+                                    <SymbolIcon Symbol="Accept" Foreground="Green"/>
+                                </Viewbox>
+                            </StackPanel>
+                            <ProgressBar 
+                                Grid.Row="2"
+                                Grid.ColumnSpan="4"
+                                Value="{x:Bind Progress,Mode=OneWay}"
+                                Visibility="{x:Bind IsDownloading, Mode=OneWay}"
+                                Minimum="0"
+                                Maximum="100"
+                                Margin="2"
+                                Foreground="Orange"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
     </Grid>
 </Page>
