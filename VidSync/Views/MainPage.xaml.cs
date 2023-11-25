@@ -1,5 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Controls;
-
+using System.Diagnostics;
 using VidSync.ViewModels;
 
 namespace VidSync.Views;
@@ -30,6 +30,26 @@ public sealed partial class MainPage : Page
         if (result == ContentDialogResult.Primary)
         {
 
+        }
+    }
+
+    private void ButtonOpenFolder_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        try
+        {
+            Process.Start("explorer.exe", ViewModel.LocalPath);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
+    }
+
+    private void ButtonDeleteItem_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        if(ViewModel.SelectedItem != null)
+        {
+            ViewModel.DeleteItemCommand.Execute(ViewModel.SelectedItem);
         }
     }
 }

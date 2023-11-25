@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:VidSync.Contracts.ViewModels"
     mc:Ignorable="d"
+    Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
     CloseButtonText="Cancel"
     PrimaryButtonText="Download"
     IsPrimaryButtonEnabled="{x:Bind ViewModel.IsAnalyzed, Mode=OneWay}"
@@ -40,7 +41,7 @@
             </StackPanel>
         </Grid>
         <StackPanel Spacing="5" Visibility="{x:Bind ViewModel.IsAnalyzed, Mode=OneWay}" >
-            <Line Stretch="Fill" Stroke="LightGray" X2="1" Margin="0,10" />
+            <Line Stretch="Fill" Stroke="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" X2="1" Margin="0,10" />
             <Grid ColumnSpacing="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -58,8 +59,8 @@
             <ComboBox 
                 Header="Video Quality:" 
                 Width="150"
-                Text="{x:Bind ViewModel.SelectedQuality, Mode=OneWay}"
                 ItemsSource="{x:Bind ViewModel.Qualities, Mode=OneWay}"
+                SelectedValue="720p"
                 SelectedItem="{x:Bind ViewModel.SelectedQuality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             </ComboBox>
         </StackPanel>

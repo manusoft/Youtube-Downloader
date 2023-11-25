@@ -44,7 +44,7 @@ public class AppNotificationService : IAppNotificationService
 
         App.MainWindow.DispatcherQueue.TryEnqueue(() =>
         {
-            App.MainWindow.ShowMessageDialogAsync("TODO: Handle notification invocations when your app is already running.", "Notification Invoked");
+            App.MainWindow.ShowMessageDialogAsync("Download is completed! Rate this App please...", "Vidsync");
 
             App.MainWindow.BringToFront();
         });

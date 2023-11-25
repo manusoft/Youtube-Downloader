@@ -67,14 +67,15 @@
             Padding="-5,5,0,0">
             <ListView
                 x:Name="lstView"
-                SelectionMode="None"
-                ItemsSource="{x:Bind ViewModel.DownloadItems}">
+                SelectionMode="Single"
+                ItemsSource="{x:Bind ViewModel.DownloadItems}"
+                SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="m:DownloadItem">
                         <Grid
                             Margin="0,3"
                             Padding="1"
-                            BorderBrush="LightGray" 
+                            BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" 
                             BorderThickness="0.5" 
                             RowSpacing="0"
                             ColumnSpacing="5"
@@ -87,6 +88,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
@@ -108,31 +110,66 @@
                                 Grid.Row="1"
                                 Orientation="Horizontal" 
                                 Spacing="5">
-                                <SymbolIcon Symbol="Clock"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Clock"/>
+                                </Viewbox>                                
                                 <TextBlock Text="{x:Bind Duration}" VerticalAlignment="Center"/>
-                                <SymbolIcon Symbol="Attach"/>
-                                <TextBlock Text="{x:Bind Container.Name}" Foreground="Orange" VerticalAlignment="Center"/>
-                                <TextBlock Text="{x:Bind FileMegaByte}" VerticalAlignment="Center"/>
-                                <SymbolIcon Symbol="Video"/>
-                                <TextBlock Text="{x:Bind VideoInfo}" VerticalAlignment="Center" Foreground="OrangeRed"/>                                
-                                <SymbolIcon Symbol="Audio"/>
-                                <TextBlock Text="{x:Bind AudioCodec}" VerticalAlignment="Center" Foreground="OrangeRed"/>                               
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Attach"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind FileFormat}" Foreground="Orange" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind FileSize}" VerticalAlignment="Center"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Video"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind VideoInfo}" VerticalAlignment="Center" Foreground="OrangeRed"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Audio"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind AudioCodec}" VerticalAlignment="Center" Foreground="OrangeRed"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Download"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind ProgressText, Mode=OneWay}" VerticalAlignment="Center" Foreground="DeepSkyBlue"/>
                             </StackPanel>
                             <StackPanel 
                                 Grid.Column="2"
                                 Grid.RowSpan="2"
-                                VerticalAlignment="Center">
-                                <Border BorderBrush="LightGray" BorderThickness="1" Width="1" Height="40" />
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind IsCompleted, Mode=OneWay}">
+                                <Border BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" BorderThickness="1" Width="1" Height="40" />
                             </StackPanel>
                             <StackPanel 
                                 Orientation="Horizontal"                                
                                 Grid.Column="3"
                                 Grid.RowSpan="2"
-                                VerticalAlignment="Center">
-                                <AppBarButton Icon="Delete" LabelPosition="Collapsed" Width="40"/>
-                                <AppBarButton Icon="OpenLocal" LabelPosition="Collapsed" Width="40"/>
-                                <AppBarButton Icon="Accept" LabelPosition="Collapsed" Width="40" Foreground="Green"/>
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind IsCompleted, Mode=OneWay}">
+                                <AppBarButton 
+                                    x:Name="ButtonDeleteItem" 
+                                    Icon="Delete" 
+                                    LabelPosition="Collapsed" 
+                                    Width="40" 
+                                    Click="ButtonDeleteItem_Click"/>
+                                <AppBarButton 
+                                    x:Name="ButtonOpenFolder" 
+                                    Icon="OpenLocal" 
+                                    LabelPosition="Collapsed" 
+                                    Width="40" 
+                                    Click="ButtonOpenFolder_Click"/>
+                                <Viewbox Width="16" Height="16" Margin="5,0,10,0">
+                                    <SymbolIcon Symbol="Accept" Foreground="Green"/>
+                                </Viewbox>
                             </StackPanel>
+                            <ProgressBar 
+                                Grid.Row="2"
+                                Grid.ColumnSpan="4"
+                                Value="{x:Bind Progress,Mode=OneWay}"
+                                Visibility="{x:Bind IsDownloading, Mode=OneWay}"
+                                Minimum="0"
+                                Maximum="100"
+                                Margin="2"
+                                Foreground="Orange"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
