@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "VidSync (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "VidSync (Unpackaged)": {
+        "commandName": "Project"
+      }
+    }
+}
