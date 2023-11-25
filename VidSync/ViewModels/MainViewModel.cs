@@ -22,8 +22,8 @@ public partial class MainViewModel : BaseViewModel
 
     public MainViewModel()
     {
-        LoadFromJson();
-        StartDownloadAsync();
+        LoadDownloadLost();
+        StartDownloadCommand.Execute(null);
     }
 
     public async Task AnalyzeVideoLinkAsync()
@@ -56,6 +56,7 @@ public partial class MainViewModel : BaseViewModel
 
             bitmap.UriSource = new Uri(ThumbnailUrl);
 
+            VideoId = video.Id;
             VideoTitle = video.Title;
             VideoDuration = video.Duration!.Value.ToString();
             VideoThumbnail = bitmap;
@@ -75,13 +76,15 @@ public partial class MainViewModel : BaseViewModel
     [RelayCommand]
     private async Task AddDownloadItem()
     {
+        if (DownloadItems.Any(x => x.Id == VideoId)) return;
+
         try
         {
             var videoPlayerStream = StreamInfo.First(video => video.VideoQuality.Label == SelectedQuality);
 
             DownloadItem downloadItem = new DownloadItem()
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = VideoId,
                 Title = VideoTitle,
                 Duration = VideoDuration,
                 ImageUrl = ThumbnailUrl,
@@ -98,16 +101,17 @@ public partial class MainViewModel : BaseViewModel
 
             DownloadItems.Add(downloadItem);
 
-            SaveToJson();
+            SaveDownloadList();
 
             await StartDownloadAsync();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            Debug.WriteLine(ex.Message);
         }
     }
 
+    [RelayCommand]
     private async Task StartDownloadAsync()
     {
         try
@@ -116,6 +120,7 @@ public partial class MainViewModel : BaseViewModel
             {
                 if (!item.IsCompleted && !item.IsDownloading)
                 {
+                    item.IsError = false;
                     item.IsDownloading = true;
 
                     await DownloadItemAsync(item);
@@ -165,12 +170,16 @@ public partial class MainViewModel : BaseViewModel
 
             download.IsDownloading = false;
             download.IsCompleted = true;
-            SaveToJson();
+            download.IsError = false;
+            download.ProgressText = "Completed";
+            SaveDownloadList();
             App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
         }
         catch (Exception ex)
         {
             download.IsDownloading = false;
+            download.IsCompleted = false;
+            download.IsError = true;
             Debug.WriteLine(ex.Message);
         }
     }
@@ -181,7 +190,7 @@ public partial class MainViewModel : BaseViewModel
         try
         {
             DownloadItems.Remove(item);
-            SaveToJson();
+            SaveDownloadList();
         }
         catch (Exception ex)
         {
@@ -189,28 +198,28 @@ public partial class MainViewModel : BaseViewModel
         }
     }
 
-    [RelayCommand]
-    private async Task PauseDownload(string id)
-    {
-        var downloadItem = GetDownloadItem(id);
-        if (downloadItem != null)
-        {
-            downloadItem.IsPaused = true;
-            downloadItem.CancellationTokenSource.Cancel();
-        }
-    }
+    //[RelayCommand]
+    //private async Task PauseDownload(string id)
+    //{
+    //    var downloadItem = GetDownloadItem(id);
+    //    if (downloadItem != null)
+    //    {
+    //        //downloadItem.IsPaused = true;
+    //        downloadItem.CancellationTokenSource.Cancel();
+    //    }
+    //}
 
-    [RelayCommand]
-    async Task ResumeDownload(string id)
-    {
-        var downloadItem = GetDownloadItem(id);
-        if (downloadItem != null)
-        {
-            downloadItem.IsPaused = false;
-            downloadItem.CancellationTokenSource = new CancellationTokenSource();
-            //await StartDownloadAsync(downloadItem);
-        }
-    }
+    //[RelayCommand]
+    //async Task ResumeDownload(string id)
+    //{
+    //    var downloadItem = GetDownloadItem(id);
+    //    if (downloadItem != null)
+    //    {
+    //        //downloadItem.IsPaused = false;
+    //        downloadItem.CancellationTokenSource = new CancellationTokenSource();
+    //        //await StartDownloadAsync(downloadItem);
+    //    }
+    //}
 
     [RelayCommand]
     private void GotoSettingsPage()
@@ -224,7 +233,7 @@ public partial class MainViewModel : BaseViewModel
     }
 
 
-    private void SaveToJson()
+    private void SaveDownloadList()
     {
         try
         {
@@ -238,7 +247,7 @@ public partial class MainViewModel : BaseViewModel
         }
     }
 
-    private void LoadFromJson()
+    private void LoadDownloadLost()
     {
         try
         {
@@ -258,6 +267,9 @@ public partial class MainViewModel : BaseViewModel
 
     public ObservableCollection<DownloadItem> DownloadItems { get; set; } = new ObservableCollection<DownloadItem>();
     public ObservableCollection<string> Qualities { get; set; } = new ObservableCollection<string>();
+
+    [ObservableProperty]
+    private string videoId;
 
     [ObservableProperty]
     private DownloadItem selectedItem;
