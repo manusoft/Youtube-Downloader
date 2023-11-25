@@ -55,7 +55,12 @@
                     HorizontalContentAlignment="Stretch"/>
                 <Button Grid.Column="1" VerticalAlignment="Bottom">...</Button>
             </Grid>
-            <ComboBox Header="Video Quality:" Width="150">
+            <ComboBox 
+                Header="Video Quality:" 
+                Width="150"
+                Text="{x:Bind ViewModel.SelectedQuality, Mode=OneWay}"
+                ItemsSource="{x:Bind ViewModel.Qualities, Mode=OneWay}"
+                SelectedItem="{x:Bind ViewModel.SelectedQuality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             </ComboBox>
         </StackPanel>
     </StackPanel>

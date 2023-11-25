@@ -10,7 +10,7 @@ public partial class BaseViewModel : ObservableRecipient
 
     public BaseViewModel()
     {
-       NavigationService = App.GetService<NavigationService>();
+       NavigationService = App.GetService<INavigationService>();
     }
 
     [ObservableProperty]

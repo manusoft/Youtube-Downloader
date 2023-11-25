@@ -59,4 +59,11 @@ public partial class SettingsViewModel : BaseViewModel
 
         return $"{"AppDisplayName".GetLocalized()} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
     }
+
+    [RelayCommand]
+    private void GotoBack()
+    {
+        if (NavigationService.CanGoBack)
+            NavigationService.GoBack();
+    }
 }
