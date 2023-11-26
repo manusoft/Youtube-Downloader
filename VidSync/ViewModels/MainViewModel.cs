@@ -1,11 +1,10 @@
-﻿using AngleSharp.Io;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using VidSync.Contracts.Services;
 using VidSync.Helpers;
@@ -23,7 +22,7 @@ public partial class MainViewModel : BaseViewModel
     public MainViewModel()
     {
         LoadDownloadLost();
-        StartDownloadCommand.Execute(null);
+        CheckDownloads();
     }
 
     public async Task AnalyzeVideoLinkAsync()
@@ -76,7 +75,17 @@ public partial class MainViewModel : BaseViewModel
     [RelayCommand]
     private async Task AddDownloadItem()
     {
-        if (DownloadItems.Any(x => x.Id == VideoId)) return;
+        if (DownloadItems.Any(x => x.Id == VideoId))
+        {
+            App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+            {
+                App.MainWindow.ShowMessageDialogAsync("Download item already exist!!", "Vidsync");
+
+                App.MainWindow.BringToFront();
+            });
+
+            return;
+        }
 
         try
         {
@@ -108,6 +117,35 @@ public partial class MainViewModel : BaseViewModel
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
+        }
+    }
+
+    private void CheckDownloads()
+    {
+        try
+        {
+            foreach (var item in DownloadItems)
+            {
+                if (item.ProgressText == "Completed" || item.ProgressText == "100%")
+                {
+                    item.IsError = false;
+                    item.IsDownloading = false;
+                    item.IsCompleted = true;
+                    item.ProgressText = "Completed";
+                }
+                else
+                {
+                    item.IsError = true;
+                    item.IsDownloading = false;
+                    item.IsCompleted = false;
+                    item.ProgressText = "Retry";
+                }
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
         }
     }
 
@@ -173,14 +211,16 @@ public partial class MainViewModel : BaseViewModel
             download.IsError = false;
             download.ProgressText = "Completed";
             SaveDownloadList();
-            App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
+            App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationDownloadComplete".GetLocalized(), AppContext.BaseDirectory));
         }
         catch (Exception ex)
         {
             download.IsDownloading = false;
             download.IsCompleted = false;
             download.IsError = true;
+            SaveDownloadList();
             Debug.WriteLine(ex.Message);
+            App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationDownloadError".GetLocalized(), AppContext.BaseDirectory));
         }
     }
 
@@ -237,7 +277,7 @@ public partial class MainViewModel : BaseViewModel
     {
         try
         {
-            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),"vidsync.json");
+            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "vidsync.json");
             var jsonString = JsonSerializer.Serialize(DownloadItems);
             File.WriteAllText(filePath, jsonString);
         }

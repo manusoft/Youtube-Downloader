@@ -112,53 +112,95 @@
                                 Spacing="5">
                                 <Viewbox Width="14" Height="14">
                                     <SymbolIcon Symbol="Clock"/>
-                                </Viewbox>                                
-                                <TextBlock Text="{x:Bind Duration}" VerticalAlignment="Center"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind Duration}" Foreground="Gray" VerticalAlignment="Center"/>
                                 <Viewbox Width="14" Height="14">
                                     <SymbolIcon Symbol="Attach"/>
                                 </Viewbox>
                                 <TextBlock Text="{x:Bind FileFormat}" Foreground="Orange" VerticalAlignment="Center"/>
-                                <TextBlock Text="{x:Bind FileSize}" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind FileSize}" VerticalAlignment="Center" Foreground="DimGray"/>
                                 <Viewbox Width="14" Height="14">
                                     <SymbolIcon Symbol="Video"/>
                                 </Viewbox>
-                                <TextBlock Text="{x:Bind VideoInfo}" VerticalAlignment="Center" Foreground="OrangeRed"/>
+                                <TextBlock Text="{x:Bind VideoInfo}" VerticalAlignment="Center" Foreground="Gray"/>
                                 <Viewbox Width="14" Height="14">
                                     <SymbolIcon Symbol="Audio"/>
                                 </Viewbox>
-                                <TextBlock Text="{x:Bind AudioCodec}" VerticalAlignment="Center" Foreground="OrangeRed"/>
+                                <TextBlock Text="{x:Bind AudioCodec}" VerticalAlignment="Center" Foreground="Gray"/>
                                 <Viewbox Width="14" Height="14">
                                     <SymbolIcon Symbol="Download"/>
                                 </Viewbox>
-                                <TextBlock Text="{x:Bind ProgressText, Mode=OneWay}" VerticalAlignment="Center" Foreground="DeepSkyBlue"/>
+                                <TextBlock 
+                                     Text="{x:Bind ProgressText, Mode=OneWay}" 
+                                     VerticalAlignment="Center" 
+                                     Foreground="DeepSkyBlue"
+                                     Visibility="{x:Bind IsDownloading,Mode=OneWay}"/>
+                                <TextBlock 
+                                    Text="{x:Bind ProgressText, Mode=OneWay}" 
+                                    VerticalAlignment="Center" 
+                                    Foreground="SeaGreen"
+                                    Visibility="{x:Bind IsCompleted,Mode=OneWay}"/>
+                                <TextBlock 
+                                    Text="{x:Bind ProgressText, Mode=OneWay}" 
+                                    VerticalAlignment="Center" 
+                                    Foreground="Red"
+                                    Visibility="{x:Bind IsError, Mode=OneWay}"/>
                             </StackPanel>
-                            <StackPanel 
+                            <!--<StackPanel 
                                 Grid.Column="2"
                                 Grid.RowSpan="2"
                                 VerticalAlignment="Center"
                                 Visibility="{x:Bind IsCompleted, Mode=OneWay}">
                                 <Border BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" BorderThickness="1" Width="1" Height="40" />
-                            </StackPanel>
+                            </StackPanel>-->
                             <StackPanel 
                                 Orientation="Horizontal"                                
                                 Grid.Column="3"
                                 Grid.RowSpan="2"
                                 VerticalAlignment="Center"
                                 Visibility="{x:Bind IsCompleted, Mode=OneWay}">
+                                <Border BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" BorderThickness="1" Width="1" Height="40" />
                                 <AppBarButton 
                                     x:Name="ButtonDeleteItem" 
                                     Icon="Delete" 
                                     LabelPosition="Collapsed" 
                                     Width="40" 
-                                    Click="ButtonDeleteItem_Click"/>
+                                    Click="ButtonDeleteItem_Click"
+                                    ToolTipService.ToolTip="Remove"/>
                                 <AppBarButton 
                                     x:Name="ButtonOpenFolder" 
                                     Icon="OpenLocal" 
                                     LabelPosition="Collapsed" 
                                     Width="40" 
-                                    Click="ButtonOpenFolder_Click"/>
+                                    Click="ButtonOpenFolder_Click"
+                                    ToolTipService.ToolTip="Open Folder"/>
                                 <Viewbox Width="16" Height="16" Margin="5,0,10,0">
                                     <SymbolIcon Symbol="Accept" Foreground="Green"/>
+                                </Viewbox>
+                            </StackPanel>
+                            <StackPanel 
+                                 Orientation="Horizontal"                                
+                                 Grid.Column="3"
+                                 Grid.RowSpan="2"
+                                 VerticalAlignment="Center"
+                                 Visibility="{x:Bind IsError, Mode=OneWay}">
+                                <Border BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" BorderThickness="1" Width="1" Height="40" />
+                                <AppBarButton
+                                    x:Name="ButtonRetry" 
+                                    Icon="Refresh" 
+                                    LabelPosition="Collapsed" 
+                                    Width="40" 
+                                    Click="ButtonRetry_Click"
+                                    ToolTipService.ToolTip="Retry"/>
+                                <AppBarButton 
+                                    x:Name="ButtonRemoveItem" 
+                                    Icon="Delete" 
+                                    LabelPosition="Collapsed" 
+                                    Width="40" 
+                                    Click="ButtonDeleteItem_Click"
+                                    ToolTipService.ToolTip="Remove"/>
+                                <Viewbox Width="16" Height="16" Margin="5,0,10,0">
+                                    <SymbolIcon Symbol="Clear" Foreground="Red"/>
                                 </Viewbox>
                             </StackPanel>
                             <ProgressBar 

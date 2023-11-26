@@ -1,10 +1,8 @@
-﻿using System.Collections.Specialized;
+﻿using Microsoft.Windows.AppNotifications;
+using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Web;
-
-using Microsoft.Windows.AppNotifications;
-
 using VidSync.Contracts.Services;
-using VidSync.ViewModels;
 
 namespace VidSync.Notifications;
 
@@ -33,21 +31,41 @@ public class AppNotificationService : IAppNotificationService
     {
         // TODO: Handle notification invocations when your app is already running.
 
-        //// // Navigate to a specific page based on the notification arguments.
-        //// if (ParseArguments(args.Argument)["action"] == "Settings")
-        //// {
-        ////    App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-        ////    {
-        ////        _navigationService.NavigateTo(typeof(SettingsViewModel).FullName!);
-        ////    });
-        //// }
-
-        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+        if (ParseArguments(args.Argument)["action"] == "Rate")
         {
-            App.MainWindow.ShowMessageDialogAsync("Download is completed! Rate this App please...", "Vidsync");
+            App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+            {
+                try
+                {
+                    Process.Start("explorer.exe", "https://www.manojbabu.in");
+                }
+                catch (Exception)
+                {
+                }
+            });
+        }
 
-            App.MainWindow.BringToFront();
-        });
+        if (ParseArguments(args.Argument)["action"] == "Report")
+        {
+            App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+            {
+                try
+                {
+                    Process.Start("explorer.exe", "https://github.com/manusoft/Youtube-Downloader/issues/new");
+                }
+                catch (Exception)
+                {
+                }
+            });
+        }
+
+
+        //App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+        //{
+        //    App.MainWindow.ShowMessageDialogAsync("Download is completed! Rate this App please...", "Vidsync");
+
+        //    App.MainWindow.BringToFront();
+        //});
     }
 
     public bool Show(string payload)
