@@ -82,7 +82,34 @@
                     x:Uid="Settings_AboutDescription"
                     Margin="{StaticResource XSmallTopMargin}"
                     Style="{ThemeResource BodyTextBlockStyle}" />
-                <HyperlinkButton x:Uid="SettingsPage_PrivacyTermsLink" Margin="{StaticResource SettingsPageHyperlinkButtonMargin}" />
+                <HyperlinkButton x:Uid="SettingsPage_PrivacyTermsLink" Margin="0,5" />
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <HyperlinkButton Margin="0,5" NavigateUri="https://ko-fi.com/manojbabu">
+                        <HyperlinkButton.Content>
+                            <StackPanel 
+                                 Spacing="5"
+                                 Orientation="Horizontal">
+                                <Viewbox Height="20" Width="20">
+                                    <Image Source="/Assets/ko-fi.png" Height="50" Width="50" Stretch="Fill" />
+                                </Viewbox>
+                                <TextBlock Text="By me a coffiee!" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </HyperlinkButton.Content>
+                    </HyperlinkButton>
+
+                    <HyperlinkButton Margin="0,5" NavigateUri="mailto:me@manojbabu.in">
+                        <HyperlinkButton.Content>
+                            <StackPanel 
+                                 Spacing="5"
+                                 Orientation="Horizontal">
+                                <Viewbox Height="16" Width="16">
+                                    <SymbolIcon Symbol="Mail" Foreground="MediumOrchid"/>
+                                </Viewbox>
+                                <TextBlock Text="Send an email" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </HyperlinkButton.Content>
+                    </HyperlinkButton>
+                </StackPanel>               
             </StackPanel>
         </StackPanel>
     </Grid>

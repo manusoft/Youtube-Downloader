@@ -17,7 +17,8 @@ namespace VidSync.ViewModels;
 
 public partial class MainViewModel : BaseViewModel
 {
-    private int maxConcurrentDownloads = 5;
+    private int maxConcurrentDownloads = 2;
+    private SemaphoreSlim downloadSemaphore = new SemaphoreSlim(2);
 
     public MainViewModel()
     {
@@ -154,16 +155,36 @@ public partial class MainViewModel : BaseViewModel
     {
         try
         {
-            foreach (var item in DownloadItems)
-            {
-                if (!item.IsCompleted && !item.IsDownloading)
-                {
-                    item.IsError = false;
-                    item.IsDownloading = true;
+            //Use SemaphoreSlim to limit concurrent downloads
+            await downloadSemaphore.WaitAsync();
 
-                    await DownloadItemAsync(item);
-                }
-            }
+            var downloadTasks = DownloadItems
+            .Where(item => !item.IsCompleted && !item.IsDownloading)
+            .Select(item => StartDownloadItemAsync(item));           
+
+            await Task.WhenAll(downloadTasks);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            // Release the semaphore when all downloads are complete or an exception occurs
+            downloadSemaphore.Release();
+        }
+    }
+
+    private async Task StartDownloadItemAsync(DownloadItem item)
+    {
+        try
+        {
+            item.IsError = false;
+            item.IsDownloading = true;
+            item.ProgressText = "Downloading...";
+            item.CancellationTokenSource = new CancellationTokenSource();
+
+            await DownloadItemAsync(item, item.CancellationTokenSource.Token);
         }
         catch (Exception ex)
         {
@@ -171,7 +192,31 @@ public partial class MainViewModel : BaseViewModel
         }
     }
 
-    private async Task DownloadItemAsync(DownloadItem download)
+
+    [RelayCommand]
+    private void StopDownload(DownloadItem item)
+    {
+        try
+        {
+            if (item.IsDownloading)
+            {
+                // Cancel the download operation associated with the DownloadItem
+                item.CancellationTokenSource?.Cancel();
+
+                // Update the item's properties to reflect the cancellation
+                item.IsDownloading = false;
+                item.IsCompleted = false;
+                item.IsError = true;
+                item.ProgressText = "Cancelled";
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task DownloadItemAsync(DownloadItem download, CancellationToken cancellationToken)
     {
         try
         {
@@ -185,6 +230,8 @@ public partial class MainViewModel : BaseViewModel
 
             using (var client = new DownloadService(downloadFileUrl, destinationFilePath))
             {
+                client.CancellationToken = cancellationToken;
+
                 client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
                 {
                     var dispatcherQueue = App.MainWindow.DispatcherQueue;
@@ -199,9 +246,25 @@ public partial class MainViewModel : BaseViewModel
                             ProgressChanged = Math.Round((double)progressPercentage / 100, 2);
                         });
                     }
+
+                    // Check for cancellation and stop the download if necessary
+                    if (download.CancellationTokenSource.Token.IsCancellationRequested)
+                    {
+                        //The cancellation will be handled by exceptions
+                    }
                 };
 
-                await client.StartDownload();
+                try
+                {
+                    // Pass CancellationToken to the StartDownload method
+                    await client.StartDownload(cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    // Handle the cancellation exception
+                    Debug.WriteLine("Download Cancelled");
+                    return;
+                }
             }
 
             await Task.CompletedTask;
@@ -217,7 +280,7 @@ public partial class MainViewModel : BaseViewModel
         {
             download.IsDownloading = false;
             download.IsCompleted = false;
-            download.IsError = true;
+            download.IsError = download.CancellationTokenSource.Token.IsCancellationRequested; // Set IsError based on cancellation
             SaveDownloadList();
             Debug.WriteLine(ex.Message);
             App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationDownloadError".GetLocalized(), AppContext.BaseDirectory));

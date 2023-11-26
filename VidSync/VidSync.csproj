@@ -16,6 +16,7 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
   </PropertyGroup>
   <ItemGroup>
+	<Content Include="Assets\ko-fi.png" />
     <Content Include="Assets\youtube.png" />
   </ItemGroup>
   <ItemGroup>
