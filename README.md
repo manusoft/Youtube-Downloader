@@ -1,4 +1,6 @@
 # VidSync - YouTube Download Manager
+<p align="left"><img src="https://visitor-badge.laobi.icu/badge?page_id=manusoft.Youtube-Downloader" alt="visitor" style="max-width: 100%;"></p>
+
 ![Screenshot 2023-11-26 053450](https://github.com/manusoft/Youtube-Downloader/assets/83714923/b6929ffa-7464-49d2-a88a-96d7630c847d)
 ![Screenshot 2023-11-26 053526](https://github.com/manusoft/Youtube-Downloader/assets/83714923/4d1ff01a-6883-4bf6-895c-70612d0163e4)
 
