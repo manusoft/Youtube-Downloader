@@ -250,7 +250,7 @@ public partial class MainViewModel : BaseViewModel
                     // Check for cancellation and stop the download if necessary
                     if (download.CancellationTokenSource.Token.IsCancellationRequested)
                     {
-                        // Don't call client.CancelDownload();, the cancellation will be handled by exceptions
+                        //The cancellation will be handled by exceptions
                     }
                 };
 
