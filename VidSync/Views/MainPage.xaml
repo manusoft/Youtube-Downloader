@@ -5,8 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:VidSync.ViewModels"
+    xmlns:hlp="using:VidSync.Helpers"
     xmlns:m="using:VidSync.Models"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <hlp:IntegerToVisibilityConverter x:Key="IntegerToVisibility"/>
+    </Page.Resources>
 
     <Grid x:Name="ContentArea" Padding="0" Margin="0">
         <Grid.Resources>
@@ -66,10 +71,10 @@
             Grid.Row="1"
             Padding="-5,5,0,0">
             <ListView
-                x:Name="lstView"
-                SelectionMode="Single"
-                ItemsSource="{x:Bind ViewModel.DownloadItems}"
-                SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    x:Name="LVDownloadItems"
+                    SelectionMode="Single"
+                    ItemsSource="{x:Bind ViewModel.DownloadItems}"
+                    SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="m:DownloadItem">
                         <Grid
@@ -115,7 +120,7 @@
                                 </Viewbox>
                                 <TextBlock Text="{x:Bind Duration}" Foreground="Gray" VerticalAlignment="Center"/>
                                 <Viewbox Width="14" Height="14">
-                                    <SymbolIcon Symbol="Attach"/>
+                                    <SymbolIcon Symbol="Document"/>
                                 </Viewbox>
                                 <TextBlock Text="{x:Bind FileFormat}" Foreground="Orange" VerticalAlignment="Center"/>
                                 <TextBlock Text="{x:Bind FileSize}" VerticalAlignment="Center" Foreground="DimGray"/>
@@ -131,10 +136,10 @@
                                     <SymbolIcon Symbol="Download"/>
                                 </Viewbox>
                                 <TextBlock 
-                                     Text="{x:Bind ProgressText, Mode=OneWay}" 
-                                     VerticalAlignment="Center" 
-                                     Foreground="DeepSkyBlue"
-                                     Visibility="{x:Bind IsDownloading,Mode=OneWay}"/>
+                                        Text="{x:Bind ProgressText, Mode=OneWay}" 
+                                        VerticalAlignment="Center" 
+                                        Foreground="DeepSkyBlue"
+                                        Visibility="{x:Bind IsDownloading,Mode=OneWay}"/>
                                 <TextBlock 
                                     Text="{x:Bind ProgressText, Mode=OneWay}" 
                                     VerticalAlignment="Center" 
@@ -146,13 +151,6 @@
                                     Foreground="Red"
                                     Visibility="{x:Bind IsError, Mode=OneWay}"/>
                             </StackPanel>
-                            <!--<StackPanel 
-                                Grid.Column="2"
-                                Grid.RowSpan="2"
-                                VerticalAlignment="Center"
-                                Visibility="{x:Bind IsCompleted, Mode=OneWay}">
-                                <Border BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" BorderThickness="1" Width="1" Height="40" />
-                            </StackPanel>-->
                             <StackPanel 
                                 Orientation="Horizontal"                                
                                 Grid.Column="3"
@@ -179,11 +177,11 @@
                                 </Viewbox>
                             </StackPanel>
                             <StackPanel 
-                                 Orientation="Horizontal"                                
-                                 Grid.Column="3"
-                                 Grid.RowSpan="2"
-                                 VerticalAlignment="Center"
-                                 Visibility="{x:Bind IsError, Mode=OneWay}">
+                                Orientation="Horizontal"                                
+                                Grid.Column="3"
+                                Grid.RowSpan="2"
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind IsError, Mode=OneWay}">
                                 <Border BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" BorderThickness="1" Width="1" Height="40" />
                                 <AppBarButton
                                     x:Name="ButtonRetry" 
@@ -203,19 +201,44 @@
                                     <SymbolIcon Symbol="Clear" Foreground="Red"/>
                                 </Viewbox>
                             </StackPanel>
+
+                            <StackPanel 
+                                Orientation="Horizontal"                                
+                                Grid.Column="3"
+                                Grid.RowSpan="2"
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind IsDownloading, Mode=OneWay}">
+                                <Border BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" BorderThickness="1" Width="1" Height="40" />
+                                <AppBarButton
+                                    x:Name="ButtonCancel" 
+                                    Icon="Stop" 
+                                    LabelPosition="Collapsed" 
+                                    Width="40" 
+                                    Click="ButtonCancel_Click"
+                                    ToolTipService.ToolTip="Cancel"/>
+                            </StackPanel>
                             <ProgressBar 
-                                Grid.Row="2"
-                                Grid.ColumnSpan="4"
-                                Value="{x:Bind Progress,Mode=OneWay}"
-                                Visibility="{x:Bind IsDownloading, Mode=OneWay}"
-                                Minimum="0"
-                                Maximum="100"
-                                Margin="2"
-                                Foreground="Orange"/>
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="4"
+                                    Value="{x:Bind Progress,Mode=OneWay}"
+                                    Visibility="{x:Bind IsDownloading, Mode=OneWay}"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    Margin="2"
+                                    Foreground="Orange"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <StackPanel 
+                    Spacing="10"
+                    Visibility="{x:Bind ViewModel.DownloadItems.Count, Mode=OneWay, Converter={StaticResource IntegerToVisibility}}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <SymbolIcon Symbol="Download" VerticalAlignment="Center" Foreground="Red" />
+                <TextBlock Text="No download tasks." HorizontalAlignment="Center" Foreground="Gray" VerticalAlignment="Center"/>
+                <TextBlock Text="Add some URL to see downloads here." HorizontalAlignment="Center" Foreground="Gray" VerticalAlignment="Center"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>

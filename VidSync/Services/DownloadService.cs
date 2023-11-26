@@ -11,31 +11,43 @@ public class DownloadService : IDisposable
 
     public event ProgressChangedHandler ProgressChanged;
 
+    public CancellationToken CancellationToken { get; set; }
+
     public DownloadService(string downloadUrl, string destinationFilePath)
     {
         _downloadUrl = downloadUrl;
         _destinationFilePath = destinationFilePath;
     }
 
-    public async Task StartDownload()
+    public async Task StartDownload(CancellationToken cancellationToken)
     {
         httpClient = new HttpClient { Timeout = TimeSpan.FromDays(1) };
 
-        using (var response = await httpClient.GetAsync(_downloadUrl, HttpCompletionOption.ResponseHeadersRead))
-            await DownloadFileFromHttpResponseMessage(response);
+        using (var response = await httpClient.GetAsync(_downloadUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+        {
+            // Check for cancellation before processing the response
+            if (CancellationToken.IsCancellationRequested)
+            {
+                // Handle cancellation, e.g., by throwing an exception
+                throw new OperationCanceledException(cancellationToken);
+            }
+
+            await DownloadFileFromHttpResponseMessage(response, cancellationToken);
+        }
+
     }
 
-    private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response)
+    private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response, CancellationToken cancellationToken)
     {
         response.EnsureSuccessStatusCode();
 
         var totalBytes = response.Content.Headers.ContentLength;
 
         using (var contentStream = await response.Content.ReadAsStreamAsync())
-            await ProcessContentStream(totalBytes, contentStream);
+            await ProcessContentStream(totalBytes, contentStream, cancellationToken);
     }
 
-    private async Task ProcessContentStream(long? totalDownloadSize, Stream contentStream)
+    private async Task ProcessContentStream(long? totalDownloadSize, Stream contentStream, CancellationToken cancellationToken)
     {
         var totalBytesRead = 0L;
         var readCount = 0L;
@@ -54,7 +66,7 @@ public class DownloadService : IDisposable
                     continue;
                 }
 
-                await fileStream.WriteAsync(buffer, 0, bytesRead);
+                await fileStream.WriteAsync(buffer, 0, bytesRead, cancellationToken);
 
                 totalBytesRead += bytesRead;
                 readCount += 1;

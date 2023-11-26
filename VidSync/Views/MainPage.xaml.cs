@@ -57,4 +57,12 @@ public sealed partial class MainPage : Page
     {
         ViewModel.StartDownloadCommand.Execute(null);
     }
+
+    private void ButtonCancel_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedItem != null)
+        {
+            ViewModel.StopDownloadCommand.Execute(ViewModel.SelectedItem);
+        }
+    }
 }
