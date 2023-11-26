@@ -52,4 +52,9 @@ public sealed partial class MainPage : Page
             ViewModel.DeleteItemCommand.Execute(ViewModel.SelectedItem);
         }
     }
+
+    private void ButtonRetry_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        ViewModel.StartDownloadCommand.Execute(null);
+    }
 }

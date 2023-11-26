@@ -25,8 +25,6 @@ public class DownloadItem : ObservableObject
 
     [JsonIgnore]
     private string _progressText;
-
-    [JsonIgnore]
     public string ProgressText
     {
         get { return _progressText; }
@@ -42,7 +40,13 @@ public class DownloadItem : ObservableObject
         set { SetProperty(ref _progress, value); }
     }
 
-    public bool IsPaused { get; set; } = false;
+    [JsonIgnore]
+    private bool _isError;
+    public bool IsError
+    {
+        get { return _isError; }
+        set { SetProperty(ref _isError, value); }
+    }
 
     [JsonIgnore]
     private bool _isDownloading;
@@ -60,8 +64,6 @@ public class DownloadItem : ObservableObject
         set { SetProperty(ref _isCompleted, value); }
     }
 
-    public long TotalBytes { get; set; }
-    public long DownloadedBytes { get; set; }
     public DateTime CreatedAt { get; set; }
 
     [JsonIgnore]

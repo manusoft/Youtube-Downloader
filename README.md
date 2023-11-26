@@ -54,4 +54,4 @@ This project is licensed under the [MIT License](LICENSE.txt).
 
 ## Contact
 
-For issues or feature requests, please open an [issue](https://github.com/manusoft/vidsync/issues).
+For issues or feature requests, please open an [issue](https://github.com/manusoft/Youtube-Downloader/issues).
