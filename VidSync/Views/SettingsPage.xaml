@@ -92,7 +92,7 @@
                                 <Viewbox Height="20" Width="20">
                                     <Image Source="/Assets/ko-fi.png" Height="50" Width="50" Stretch="Fill" />
                                 </Viewbox>
-                                <TextBlock Text="By me a coffiee!" VerticalAlignment="Center"/>
+                                <TextBlock Text="Buy me a coffiee!" VerticalAlignment="Center"/>
                             </StackPanel>
                         </HyperlinkButton.Content>
                     </HyperlinkButton>
