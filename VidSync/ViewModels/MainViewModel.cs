@@ -1,4 +1,8 @@
-﻿namespace VidSync.ViewModels;
+﻿using System.Net;
+using VidSync.Services;
+using Windows.UI.Popups;
+
+namespace VidSync.ViewModels;
 
 public partial class MainViewModel : BaseViewModel
 {
@@ -13,7 +17,25 @@ public partial class MainViewModel : BaseViewModel
     private async void InitializeAsync()
     {
         await LoadDownloadListAsync();
-        await CheckDownloadsAsync();
+        CheckDownloads();
+        GetCookies();
+
+    }
+
+    private void GetCookies()
+    {
+        try
+        {
+            // Load cookies
+            List<Cookie> storedCookies = CookieManager.LoadCookies();
+
+            // Use the cookies (e.g., set them in the WebView2 control)
+            Cookies = storedCookies;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 
     public async Task AnalyzeVideoLinkAsync()
@@ -29,7 +51,7 @@ public partial class MainViewModel : BaseViewModel
 
             var bitmap = new BitmapImage();
 
-            var youtube = new YoutubeClient();
+            var youtube = new YoutubeClient(Cookies);
             var video = await youtube.Videos.GetAsync(VideoLink);
             var streamManifest = await youtube.Videos.Streams.GetManifestAsync(VideoLink);
 
@@ -53,8 +75,9 @@ public partial class MainViewModel : BaseViewModel
             SelectedQuality = "720p";
             IsAnalyzed = true;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine(ex.ToString());
             IsAnalyzed = false;
         }
         finally
@@ -111,7 +134,7 @@ public partial class MainViewModel : BaseViewModel
         }
     }
 
-    private Task CheckDownloadsAsync()
+    private void CheckDownloads()
     {
         try
         {
@@ -138,8 +161,6 @@ public partial class MainViewModel : BaseViewModel
         {
             Console.WriteLine(ex.Message);
         }
-
-        return Task.CompletedTask;
     }
 
     [RelayCommand]
@@ -322,6 +343,21 @@ public partial class MainViewModel : BaseViewModel
         NavigationService.NavigateTo(typeof(SettingsViewModel).FullName!.ToString(), null);
     }
 
+    [RelayCommand]
+    private async void GotoLoginPage()
+    {
+        if(Cookies.Count < 0)
+        {
+            NavigationService.NavigateTo(typeof(LoginViewModel).FullName!.ToString(), null);
+        }
+        else
+        {
+            Console.WriteLine("Already logged in");
+            //MessageDialog dialog = new MessageDialog("Already logged in", "Login");
+            //await dialog.ShowAsync();
+        }
+    }
+
     private DownloadItem? GetDownloadItem(string id)
     {
         return DownloadItems.Where(item => item.Id == id).FirstOrDefault();
@@ -395,4 +431,5 @@ public partial class MainViewModel : BaseViewModel
 
     [ObservableProperty]
     private double progressChanged;
+
 }

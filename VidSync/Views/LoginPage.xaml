@@ -1,0 +1,38 @@
+﻿<Page
+    x:Class="VidSync.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="ContentArea">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <StackPanel
+            Orientation="Horizontal"
+            Spacing="10">
+            <AppBarButton
+                Icon="Setting" 
+                LabelPosition="Collapsed"
+                Style="{StaticResource NavigationBackButtonNormalStyle}"
+                Command="{x:Bind ViewModel.GotoBackCommand}"/>
+            <TextBlock
+                Grid.Row="0"
+                x:Uid="Login_Title"
+                Style="{StaticResource PageTitleStyle}" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <WebView2 
+                x:Name="webView2"
+                Source="https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fwww.youtube.com"
+                NavigationCompleted="webView2_NavigationCompleted"
+                WebMessageReceived="webView2_WebMessageReceived"/>
+        </Grid>
+
+    </Grid>
+</Page>

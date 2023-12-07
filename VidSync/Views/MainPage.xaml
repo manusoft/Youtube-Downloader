@@ -60,10 +60,16 @@
                 Grid.Column="2"
                 VerticalAlignment="Center"
                 Orientation="Horizontal">
+                <AppBarButton
+                    Icon="Account" 
+                    LabelPosition="Collapsed"
+                    Command="{x:Bind ViewModel.GotoLoginPageCommand}"
+                    Width="40"/>
                 <AppBarButton 
                     Icon="Setting" 
                     LabelPosition="Collapsed"
-                    Command="{x:Bind ViewModel.GotoSettingsPageCommand}"/>
+                    Command="{x:Bind ViewModel.GotoSettingsPageCommand}"
+                    Width="40"/>
             </StackPanel>
         </Grid>
 

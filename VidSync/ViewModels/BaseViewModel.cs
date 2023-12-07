@@ -1,14 +1,16 @@
-﻿namespace VidSync.ViewModels;
+﻿using System.Net;
+
+namespace VidSync.ViewModels;
 
 public partial class BaseViewModel : ObservableRecipient
 {
     public readonly INavigationService NavigationService;
-    //public readonly IAppNotificationService AppNotificationService;
+    public readonly ICookieManager CookieManager;
 
     public BaseViewModel()
     {
         NavigationService = App.GetService<INavigationService>();
-        //AppNotificationService = App.GetService<IAppNotificationService>();
+        CookieManager = App.GetService<ICookieManager>();
     }
 
     [ObservableProperty]
@@ -16,4 +18,7 @@ public partial class BaseViewModel : ObservableRecipient
 
     [ObservableProperty]
     private bool isAnalyzed;
+
+    [ObservableProperty]
+    private IReadOnlyList<Cookie> cookies;
 }

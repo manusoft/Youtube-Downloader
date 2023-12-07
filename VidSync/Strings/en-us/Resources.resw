@@ -186,4 +186,8 @@
   &lt;/actions&gt;
 &lt;/toast&gt;</value>
   </data>
+  <data name="Login_Title.Text" xml:space="preserve">
+    <value>Login</value>
+    <comment>Page title for LoginPage</comment>
+  </data>
 </root>
