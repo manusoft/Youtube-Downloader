@@ -1,19 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Text;
-using System.Text.Json;
-using VidSync.Contracts.Services;
-using VidSync.Helpers;
-using VidSync.Models;
-using VidSync.Services;
-using YoutubeExplode;
-using YoutubeExplode.Videos.Streams;
-
-namespace VidSync.ViewModels;
+﻿namespace VidSync.ViewModels;
 
 public partial class MainViewModel : BaseViewModel
 {
@@ -22,8 +7,13 @@ public partial class MainViewModel : BaseViewModel
 
     public MainViewModel()
     {
-        LoadDownloadLost();
-        CheckDownloads();
+        InitializeAsync();
+    }
+
+    private async void InitializeAsync()
+    {
+        await LoadDownloadListAsync();
+        await CheckDownloadsAsync();
     }
 
     public async Task AnalyzeVideoLinkAsync()
@@ -121,7 +111,7 @@ public partial class MainViewModel : BaseViewModel
         }
     }
 
-    private void CheckDownloads()
+    private Task CheckDownloadsAsync()
     {
         try
         {
@@ -148,6 +138,8 @@ public partial class MainViewModel : BaseViewModel
         {
             Console.WriteLine(ex.Message);
         }
+
+        return Task.CompletedTask;
     }
 
     [RelayCommand]
@@ -160,7 +152,7 @@ public partial class MainViewModel : BaseViewModel
 
             var downloadTasks = DownloadItems
             .Where(item => !item.IsCompleted && !item.IsDownloading)
-            .Select(item => StartDownloadItemAsync(item));           
+            .Select(item => StartDownloadItemAsync(item));
 
             await Task.WhenAll(downloadTasks);
         }
@@ -341,7 +333,7 @@ public partial class MainViewModel : BaseViewModel
         try
         {
             var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "vidsync.json");
-            var jsonString = JsonSerializer.Serialize(DownloadItems);
+            var jsonString = System.Text.Json.JsonSerializer.Serialize(DownloadItems);
             File.WriteAllText(filePath, jsonString);
         }
         catch (Exception ex)
@@ -350,7 +342,7 @@ public partial class MainViewModel : BaseViewModel
         }
     }
 
-    private void LoadDownloadLost()
+    private async Task LoadDownloadListAsync()
     {
         try
         {
@@ -358,8 +350,8 @@ public partial class MainViewModel : BaseViewModel
 
             if (File.Exists(filePath))
             {
-                var jsonString = File.ReadAllText(filePath);
-                DownloadItems = JsonSerializer.Deserialize<ObservableCollection<DownloadItem>>(jsonString);
+                var jsonString = await File.ReadAllTextAsync(filePath);
+                DownloadItems = System.Text.Json.JsonSerializer.Deserialize<ObservableCollection<DownloadItem>>(jsonString);
             }
         }
         catch (Exception ex)
