@@ -1,8 +1,3 @@
-using Microsoft.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using VidSync.ViewModels;
-
 namespace VidSync.Views;
 
 public sealed partial class AnalyzeDialog : ContentDialog

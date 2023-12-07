@@ -1,7 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Data;
-
-namespace VidSync.Helpers;
+﻿namespace VidSync.Helpers;
 
 public class IntegerToVisibilityConverter : IValueConverter
 {

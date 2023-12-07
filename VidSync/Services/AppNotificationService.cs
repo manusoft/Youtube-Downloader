@@ -1,10 +1,4 @@
-﻿using Microsoft.Windows.AppNotifications;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Web;
-using VidSync.Contracts.Services;
-
-namespace VidSync.Notifications;
+﻿namespace VidSync.Notifications;
 
 public class AppNotificationService : IAppNotificationService
 {

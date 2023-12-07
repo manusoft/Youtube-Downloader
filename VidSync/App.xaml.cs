@@ -1,17 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.UI.Xaml;
-
-using VidSync.Activation;
-using VidSync.Contracts.Services;
-using VidSync.Helpers;
-using VidSync.Models;
-using VidSync.Notifications;
-using VidSync.Services;
-using VidSync.ViewModels;
-using VidSync.Views;
-
-namespace VidSync;
+﻿namespace VidSync;
 
 public partial class App : Application
 {
@@ -52,11 +39,14 @@ public partial class App : Application
             services.AddSingleton<IActivationService, ActivationService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<ICookieManager, CookieManager>();
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
 
             // Views and ViewModels
+            services.AddSingleton<LoginViewModel>();
+            services.AddTransient<LoginPage>();
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();
             services.AddSingleton<MainViewModel>();

@@ -1,17 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Text;
-using System.Text.Json;
-using VidSync.Contracts.Services;
-using VidSync.Helpers;
-using VidSync.Models;
+﻿using System.Net;
 using VidSync.Services;
-using YoutubeExplode;
-using YoutubeExplode.Videos.Streams;
+using Windows.UI.Popups;
 
 namespace VidSync.ViewModels;
 
@@ -22,8 +11,31 @@ public partial class MainViewModel : BaseViewModel
 
     public MainViewModel()
     {
-        LoadDownloadLost();
+        InitializeAsync();
+    }
+
+    private async void InitializeAsync()
+    {
+        await LoadDownloadListAsync();
         CheckDownloads();
+        GetCookies();
+
+    }
+
+    private void GetCookies()
+    {
+        try
+        {
+            // Load cookies
+            List<Cookie> storedCookies = CookieManager.LoadCookies();
+
+            // Use the cookies (e.g., set them in the WebView2 control)
+            Cookies = storedCookies;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 
     public async Task AnalyzeVideoLinkAsync()
@@ -39,7 +51,7 @@ public partial class MainViewModel : BaseViewModel
 
             var bitmap = new BitmapImage();
 
-            var youtube = new YoutubeClient();
+            var youtube = new YoutubeClient(Cookies);
             var video = await youtube.Videos.GetAsync(VideoLink);
             var streamManifest = await youtube.Videos.Streams.GetManifestAsync(VideoLink);
 
@@ -63,8 +75,9 @@ public partial class MainViewModel : BaseViewModel
             SelectedQuality = "720p";
             IsAnalyzed = true;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine(ex.ToString());
             IsAnalyzed = false;
         }
         finally
@@ -160,7 +173,7 @@ public partial class MainViewModel : BaseViewModel
 
             var downloadTasks = DownloadItems
             .Where(item => !item.IsCompleted && !item.IsDownloading)
-            .Select(item => StartDownloadItemAsync(item));           
+            .Select(item => StartDownloadItemAsync(item));
 
             await Task.WhenAll(downloadTasks);
         }
@@ -330,6 +343,21 @@ public partial class MainViewModel : BaseViewModel
         NavigationService.NavigateTo(typeof(SettingsViewModel).FullName!.ToString(), null);
     }
 
+    [RelayCommand]
+    private async void GotoLoginPage()
+    {
+        if(Cookies.Count < 0)
+        {
+            NavigationService.NavigateTo(typeof(LoginViewModel).FullName!.ToString(), null);
+        }
+        else
+        {
+            Console.WriteLine("Already logged in");
+            //MessageDialog dialog = new MessageDialog("Already logged in", "Login");
+            //await dialog.ShowAsync();
+        }
+    }
+
     private DownloadItem? GetDownloadItem(string id)
     {
         return DownloadItems.Where(item => item.Id == id).FirstOrDefault();
@@ -341,7 +369,7 @@ public partial class MainViewModel : BaseViewModel
         try
         {
             var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "vidsync.json");
-            var jsonString = JsonSerializer.Serialize(DownloadItems);
+            var jsonString = System.Text.Json.JsonSerializer.Serialize(DownloadItems);
             File.WriteAllText(filePath, jsonString);
         }
         catch (Exception ex)
@@ -350,7 +378,7 @@ public partial class MainViewModel : BaseViewModel
         }
     }
 
-    private void LoadDownloadLost()
+    private async Task LoadDownloadListAsync()
     {
         try
         {
@@ -358,8 +386,8 @@ public partial class MainViewModel : BaseViewModel
 
             if (File.Exists(filePath))
             {
-                var jsonString = File.ReadAllText(filePath);
-                DownloadItems = JsonSerializer.Deserialize<ObservableCollection<DownloadItem>>(jsonString);
+                var jsonString = await File.ReadAllTextAsync(filePath);
+                DownloadItems = System.Text.Json.JsonSerializer.Deserialize<ObservableCollection<DownloadItem>>(jsonString);
             }
         }
         catch (Exception ex)
@@ -403,4 +431,5 @@ public partial class MainViewModel : BaseViewModel
 
     [ObservableProperty]
     private double progressChanged;
+
 }

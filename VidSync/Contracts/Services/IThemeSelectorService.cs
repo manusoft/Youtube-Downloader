@@ -1,6 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-
-namespace VidSync.Contracts.Services;
+﻿namespace VidSync.Contracts.Services;
 
 public interface IThemeSelectorService
 {

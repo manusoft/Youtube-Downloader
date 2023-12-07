@@ -1,13 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-using Microsoft.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
-
-using Windows.UI;
-using Windows.UI.ViewManagement;
-
-namespace VidSync.Helpers;
+﻿namespace VidSync.Helpers;
 
 internal class TitleBarHelper
 {

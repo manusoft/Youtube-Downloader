@@ -1,12 +1,4 @@
-﻿using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml;
-using Microsoft.Windows.AppLifecycle;
-using Microsoft.Windows.AppNotifications;
-
-using VidSync.Contracts.Services;
-using VidSync.ViewModels;
-
-namespace VidSync.Activation;
+﻿namespace VidSync.Activation;
 
 public class AppNotificationActivationHandler : ActivationHandler<LaunchActivatedEventArgs>
 {

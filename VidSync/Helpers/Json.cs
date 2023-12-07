@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace VidSync.Helpers;
+﻿namespace VidSync.Helpers;
 
 public static class Json
 {

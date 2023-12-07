@@ -1,6 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
-
-namespace VidSync.Helpers;
+﻿namespace VidSync.Helpers;
 
 public static class FrameExtensions
 {

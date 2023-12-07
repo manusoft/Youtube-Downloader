@@ -1,6 +1,4 @@
-﻿using System.Collections.Specialized;
-
-namespace VidSync.Contracts.Services;
+﻿namespace VidSync.Contracts.Services;
 
 public interface IAppNotificationService
 {

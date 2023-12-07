@@ -1,0 +1,98 @@
+﻿
+using Microsoft.Web.WebView2.Core;
+
+namespace VidSync.Views;
+
+public sealed partial class LoginPage : Page
+{
+    public LoginViewModel ViewModel { get; }
+
+    public LoginPage()
+    {
+        ViewModel = App.GetService<LoginViewModel>();
+        InitializeComponent();
+    }
+
+    private async void webView2_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
+    {
+
+        // Check if there are cookies
+        var cookiesTask = await webView2.CoreWebView2.CookieManager.GetCookiesAsync("http://www.youtube.com");
+
+        if (cookiesTask.Count > 0)
+        {
+            // The user is logged in
+            Console.WriteLine("User is logged in.");
+        }
+        else
+        {
+            // The user is not logged in
+            Console.WriteLine("User is not logged in.");
+
+            // Set the source to the login page
+            webView2.Source = new Uri("https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fwww.youtube.com");
+        }
+
+        // Execute JavaScript to get cookies
+        string cookiesScript = @"
+                (function() {
+                    var cookies = document.cookie;
+                    window.chrome.webview.postMessage({ cookies: cookies });
+                })();";
+
+        await webView2.CoreWebView2.ExecuteScriptAsync(cookiesScript);
+    }
+
+    private void webView2_WebMessageReceived(WebView2 sender, CoreWebView2WebMessageReceivedEventArgs args)
+    {
+        try
+        {
+            // Check if the message contains cookie information
+            if (args.WebMessageAsJson is not null)
+            {
+                var message = args.WebMessageAsJson.ToString();
+
+                // Parse the JSON string into a JsonDocument
+                using (JsonDocument jsonDocument = JsonDocument.Parse(message))
+                {
+                    // Check if the "cookies" property is present
+                    if (jsonDocument.RootElement.TryGetProperty("cookies", out var cookiesElement))
+                    {
+                        string cookies = cookiesElement.GetString();
+
+                        if (cookies != null && cookies.StartsWith("SID=")) // Adjust the condition based on your actual cookie format
+                        {
+                            string[] cookieParts = cookies.Split(';');
+
+                            // Convert the cookies to System.Net.Cookie objects
+                            var cookieCollection = new List<System.Net.Cookie>();
+
+                            foreach (var cookieString in cookieParts)
+                            {
+                                var cookieKeyValue = cookieString.Trim().Split('=');
+                                if (cookieKeyValue.Length == 2)
+                                {
+                                    var cookie = new System.Net.Cookie
+                                    {
+                                        Name = cookieKeyValue[0],
+                                        Value = cookieKeyValue[1],
+                                        Domain = webView2.Source.Host,
+                                        Path = webView2.Source.AbsolutePath
+                                    };
+                                    cookieCollection.Add(cookie);
+                                }
+                            }
+
+                            // Update ViewModel with the collected cookies
+                            ViewModel.CookieManager.SaveCookies(cookieCollection);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

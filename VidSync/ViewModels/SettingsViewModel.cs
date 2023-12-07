@@ -1,17 +1,4 @@
-﻿using System.Reflection;
-using System.Windows.Input;
-
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-
-using Microsoft.UI.Xaml;
-
-using VidSync.Contracts.Services;
-using VidSync.Helpers;
-
-using Windows.ApplicationModel;
-
-namespace VidSync.ViewModels;
+﻿namespace VidSync.ViewModels;
 
 public partial class SettingsViewModel : BaseViewModel
 {

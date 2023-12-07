@@ -1,7 +1,4 @@
-﻿using Windows.Storage;
-using Windows.Storage.Streams;
-
-namespace VidSync.Helpers;
+﻿namespace VidSync.Helpers;
 
 public static class SettingsStorageExtensions
 {

@@ -1,12 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-
-using Microsoft.UI.Xaml.Controls;
-
-using VidSync.Contracts.Services;
-using VidSync.ViewModels;
-using VidSync.Views;
-
-namespace VidSync.Services;
+﻿namespace VidSync.Services;
 
 public class PageService : IPageService
 {
@@ -16,6 +8,7 @@ public class PageService : IPageService
     {
         Configure<MainViewModel, MainPage>();
         Configure<SettingsViewModel, SettingsPage>();
+        Configure<LoginViewModel, LoginPage>();
     }
 
     public Type GetPageType(string key)
