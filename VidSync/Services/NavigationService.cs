@@ -1,13 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-
-using VidSync.Contracts.Services;
-using VidSync.Contracts.ViewModels;
-using VidSync.Helpers;
-
-namespace VidSync.Services;
+﻿namespace VidSync.Services;
 
 public class NavigationService : INavigationService
 {

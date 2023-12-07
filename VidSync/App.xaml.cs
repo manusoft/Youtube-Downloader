@@ -1,17 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.UI.Xaml;
-
-using VidSync.Activation;
-using VidSync.Contracts.Services;
-using VidSync.Helpers;
-using VidSync.Models;
-using VidSync.Notifications;
-using VidSync.Services;
-using VidSync.ViewModels;
-using VidSync.Views;
-
-namespace VidSync;
+﻿namespace VidSync;
 
 public partial class App : Application
 {

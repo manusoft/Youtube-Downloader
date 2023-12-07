@@ -1,8 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using System.Diagnostics;
-using VidSync.ViewModels;
-
-namespace VidSync.Views;
+﻿namespace VidSync.Views;
 
 public sealed partial class MainPage : Page
 {

@@ -1,12 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-
-using Microsoft.UI.Xaml.Controls;
-
-using VidSync.Contracts.Services;
-using VidSync.ViewModels;
-using VidSync.Views;
-
-namespace VidSync.Services;
+﻿namespace VidSync.Services;
 
 public class PageService : IPageService
 {

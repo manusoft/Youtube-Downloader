@@ -1,8 +1,4 @@
-﻿using VidSync.Helpers;
-
-using Windows.UI.ViewManagement;
-
-namespace VidSync;
+﻿namespace VidSync;
 
 public sealed partial class MainWindow : WindowEx
 {

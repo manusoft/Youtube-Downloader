@@ -1,11 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-
-using VidSync.Contracts.Services;
-using VidSync.Helpers;
-using VidSync.Models;
-using Windows.Storage;
-
-namespace VidSync.Services;
+﻿namespace VidSync.Services;
 
 public class LocalSettingsService : ILocalSettingsService
 {

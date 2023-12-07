@@ -1,11 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-
-using VidSync.Activation;
-using VidSync.Contracts.Services;
-using VidSync.Views;
-
-namespace VidSync.Services;
+﻿namespace VidSync.Services;
 
 public class ActivationService : IActivationService
 {

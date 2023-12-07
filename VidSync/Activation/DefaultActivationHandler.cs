@@ -1,9 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-
-using VidSync.Contracts.Services;
-using VidSync.ViewModels;
-
-namespace VidSync.Activation;
+﻿namespace VidSync.Activation;
 
 public class DefaultActivationHandler : ActivationHandler<LaunchActivatedEventArgs>
 {

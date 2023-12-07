@@ -1,9 +1,4 @@
-﻿using System.Text;
-
-using Newtonsoft.Json;
-using VidSync.Contracts.Services;
-
-namespace VidSync.Services;
+﻿namespace VidSync.Services;
 
 public class FileService : IFileService
 {

@@ -1,6 +1,4 @@
-﻿using Microsoft.Windows.ApplicationModel.Resources;
-
-namespace VidSync.Helpers;
+﻿namespace VidSync.Helpers;
 
 public static class ResourceExtensions
 {

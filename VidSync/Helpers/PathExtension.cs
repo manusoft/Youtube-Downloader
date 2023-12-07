@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace VidSync.Helpers;
+﻿namespace VidSync.Helpers;
 
 public static class PathExtension
 {

@@ -1,9 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-
-using VidSync.Contracts.Services;
-using VidSync.Helpers;
-
-namespace VidSync.Services;
+﻿namespace VidSync.Services;
 
 public class ThemeSelectorService : IThemeSelectorService
 {

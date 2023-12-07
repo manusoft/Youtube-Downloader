@@ -1,13 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Newtonsoft.Json.Linq;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
-using YoutubeExplode.Videos;
-
-namespace VidSync.Models;
+﻿namespace VidSync.Models;
 
 public class DownloadItem : ObservableObject
 {
@@ -23,7 +14,7 @@ public class DownloadItem : ObservableObject
     public string LocalPath { get; set; }
     public string ImageUrl { get; set; }
 
-    [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     private string _progressText;
     public string ProgressText
     {
@@ -31,16 +22,16 @@ public class DownloadItem : ObservableObject
         set { SetProperty(ref _progressText, value); }
     }
 
-    [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     private double _progress;
-    [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     public double Progress
     {
         get { return _progress; }
         set { SetProperty(ref _progress, value); }
     }
 
-    [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     private bool _isError;
     public bool IsError
     {
@@ -48,7 +39,7 @@ public class DownloadItem : ObservableObject
         set { SetProperty(ref _isError, value); }
     }
 
-    [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     private bool _isDownloading;
     public bool IsDownloading
     {
@@ -56,7 +47,7 @@ public class DownloadItem : ObservableObject
         set { SetProperty(ref _isDownloading, value); }
     }
 
-    [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     private bool _isCompleted;
     public bool IsCompleted
     {
@@ -66,11 +57,11 @@ public class DownloadItem : ObservableObject
 
     public DateTime CreatedAt { get; set; }
 
-    [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     public ImageSource Image => GetImage();
 
     [NotMapped]
-    [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     public CancellationTokenSource CancellationTokenSource { get; set; }
 
     private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = "")

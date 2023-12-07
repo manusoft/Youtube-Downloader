@@ -1,7 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Text;
-
-namespace VidSync.Helpers;
+﻿namespace VidSync.Helpers;
 
 public class RuntimeHelper
 {

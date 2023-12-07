@@ -1,9 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using VidSync.Contracts.Services;
-using VidSync.Helpers;
-using VidSync.Services;
-
-namespace VidSync.ViewModels;
+﻿namespace VidSync.ViewModels;
 
 public partial class BaseViewModel : ObservableRecipient
 {
