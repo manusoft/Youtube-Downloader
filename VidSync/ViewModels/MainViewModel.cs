@@ -1,6 +1,4 @@
 ﻿using System.Net;
-using VidSync.Services;
-using Windows.UI.Popups;
 
 namespace VidSync.ViewModels;
 
@@ -19,7 +17,6 @@ public partial class MainViewModel : BaseViewModel
         await LoadDownloadListAsync();
         CheckDownloads();
         GetCookies();
-
     }
 
     private void GetCookies()
@@ -31,6 +28,18 @@ public partial class MainViewModel : BaseViewModel
 
             // Use the cookies (e.g., set them in the WebView2 control)
             Cookies = storedCookies;
+
+            if(Cookies.Count > 0)
+            {
+                IsLoggedIn = true;
+                LoggedInMessage = "You're already signed in. Dive into the app and make the most of your experience!";
+            }
+            else
+            {
+                IsLoggedIn = false;
+                LoggedInMessage = "You're not signed in. Sign in to explore videos and channels tailored to your interests.";
+            }
+                
         }
         catch (Exception ex)
         {
@@ -40,13 +49,13 @@ public partial class MainViewModel : BaseViewModel
 
     public async Task AnalyzeVideoLinkAsync()
     {
-        if (string.IsNullOrEmpty(VideoLink)) return;
-        if (IsAnalyzing) return;
+        if (string.IsNullOrEmpty(VideoLink) || IsAnalyzing) return;
 
         try
         {
             Qualities.Clear();
             IsAnalyzing = true;
+            IsAnalyzeError = false;
             IsAnalyzed = false;
 
             var bitmap = new BitmapImage();
@@ -72,12 +81,13 @@ public partial class MainViewModel : BaseViewModel
             VideoTitle = video.Title;
             VideoDuration = video.Duration!.Value.ToString();
             VideoThumbnail = bitmap;
-            SelectedQuality = "720p";
-            IsAnalyzed = true;
+            SelectedQuality = Qualities.LastOrDefault()!.ToString();
+            IsAnalyzed = true;            
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.ToString());
+            IsAnalyzeError = true;
+            ErrorMessage = ex.Message;
             IsAnalyzed = false;
         }
         finally
@@ -91,19 +101,13 @@ public partial class MainViewModel : BaseViewModel
     {
         if (DownloadItems.Any(x => x.Id == VideoId))
         {
-            App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-            {
-                App.MainWindow.ShowMessageDialogAsync("Download item already exist!!", "Vidsync");
-
-                App.MainWindow.BringToFront();
-            });
-
+            ShowMessageBox("Download item already exist!!", "Vidsync");
             return;
         }
 
         try
         {
-            var videoPlayerStream = StreamInfo.First(video => video.VideoQuality.Label == SelectedQuality);
+            var videoPlayerStream = StreamInfo!.First(video => video.VideoQuality.Label == SelectedQuality);
 
             DownloadItem downloadItem = new DownloadItem()
             {
@@ -205,7 +209,6 @@ public partial class MainViewModel : BaseViewModel
         }
     }
 
-
     [RelayCommand]
     private void StopDownload(DownloadItem item)
     {
@@ -241,7 +244,7 @@ public partial class MainViewModel : BaseViewModel
 
             var destinationFilePath = $"{download.LocalPath}\\{saveFileName}.mp4";
 
-            using (var client = new DownloadService(downloadFileUrl, destinationFilePath))
+            using (var client = new DownloadService(downloadFileUrl!, destinationFilePath))
             {
                 client.CancellationToken = cancellationToken;
 
@@ -255,13 +258,13 @@ public partial class MainViewModel : BaseViewModel
                         {
                             Debug.WriteLine($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
                             download.ProgressText = $"{progressPercentage}%";
-                            download.Progress = (double)progressPercentage;
+                            download.Progress = (double)progressPercentage!;
                             ProgressChanged = Math.Round((double)progressPercentage / 100, 2);
                         });
                     }
 
                     // Check for cancellation and stop the download if necessary
-                    if (download.CancellationTokenSource.Token.IsCancellationRequested)
+                    if (download.CancellationTokenSource!.Token.IsCancellationRequested)
                     {
                         //The cancellation will be handled by exceptions
                     }
@@ -293,7 +296,7 @@ public partial class MainViewModel : BaseViewModel
         {
             download.IsDownloading = false;
             download.IsCompleted = false;
-            download.IsError = download.CancellationTokenSource.Token.IsCancellationRequested; // Set IsError based on cancellation
+            download.IsError = download.CancellationTokenSource!.Token.IsCancellationRequested; // Set IsError based on cancellation
             SaveDownloadList();
             Debug.WriteLine(ex.Message);
             App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationDownloadError".GetLocalized(), AppContext.BaseDirectory));
@@ -340,21 +343,19 @@ public partial class MainViewModel : BaseViewModel
     [RelayCommand]
     private void GotoSettingsPage()
     {
-        NavigationService.NavigateTo(typeof(SettingsViewModel).FullName!.ToString(), null);
+        NavigationService.NavigateTo(typeof(SettingsViewModel).FullName!.ToString(), Cookies);
     }
 
     [RelayCommand]
-    private async void GotoLoginPage()
+    private void GotoLoginPage()
     {
-        if(Cookies.Count < 0)
+        if(Cookies.Count == 0)
         {
             NavigationService.NavigateTo(typeof(LoginViewModel).FullName!.ToString(), null);
         }
         else
         {
-            Console.WriteLine("Already logged in");
-            //MessageDialog dialog = new MessageDialog("Already logged in", "Login");
-            //await dialog.ShowAsync();
+            ShowMessageBox("Already logged in", "Login");
         }
     }
 
@@ -362,7 +363,6 @@ public partial class MainViewModel : BaseViewModel
     {
         return DownloadItems.Where(item => item.Id == id).FirstOrDefault();
     }
-
 
     private void SaveDownloadList()
     {
@@ -387,7 +387,7 @@ public partial class MainViewModel : BaseViewModel
             if (File.Exists(filePath))
             {
                 var jsonString = await File.ReadAllTextAsync(filePath);
-                DownloadItems = System.Text.Json.JsonSerializer.Deserialize<ObservableCollection<DownloadItem>>(jsonString);
+                DownloadItems = System.Text.Json.JsonSerializer.Deserialize<ObservableCollection<DownloadItem>>(jsonString)!;
             }
         }
         catch (Exception ex)
@@ -396,14 +396,24 @@ public partial class MainViewModel : BaseViewModel
         }
     }
 
+    public void ShowMessageBox(string content, string title)
+    {
+        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+        {
+            App.MainWindow.ShowMessageDialogAsync(content, title);
+
+            App.MainWindow.BringToFront();
+        });
+    }
+
     public ObservableCollection<DownloadItem> DownloadItems { get; set; } = new ObservableCollection<DownloadItem>();
     public ObservableCollection<string> Qualities { get; set; } = new ObservableCollection<string>();
 
     [ObservableProperty]
-    private string videoId;
+    private string videoId = string.Empty;
 
     [ObservableProperty]
-    private DownloadItem selectedItem;
+    private DownloadItem selectedItem = null!;
 
     [ObservableProperty]
     private string videoLink = string.Empty;
@@ -427,7 +437,7 @@ public partial class MainViewModel : BaseViewModel
     private IEnumerable<MuxedStreamInfo>? streamInfo;
 
     [ObservableProperty]
-    private string selectedQuality;
+    private string selectedQuality = "720p";
 
     [ObservableProperty]
     private double progressChanged;

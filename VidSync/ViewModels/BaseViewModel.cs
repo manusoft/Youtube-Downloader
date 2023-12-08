@@ -20,5 +20,19 @@ public partial class BaseViewModel : ObservableRecipient
     private bool isAnalyzed;
 
     [ObservableProperty]
-    private IReadOnlyList<Cookie> cookies;
+    private bool isAnalyzeError;
+
+    [ObservableProperty]
+    private string errorMessage;
+
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(IsNotLoggedIn))]
+    private bool isLoggedIn;
+
+    public bool IsNotLoggedIn => !IsLoggedIn;
+
+    [ObservableProperty]
+    private string loggedInMessage;
+
+    [ObservableProperty]
+    private IReadOnlyList<Cookie> cookies = null!;
 }

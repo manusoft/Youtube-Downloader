@@ -6,15 +6,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid x:Name="ContentArea">
+    <Grid Padding="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
         <StackPanel
             Orientation="Horizontal"
-            Spacing="10">
+            Spacing="10"            
+            Margin="0,0,0,0">
             <AppBarButton
                 Icon="Setting" 
                 LabelPosition="Collapsed"
@@ -23,12 +24,13 @@
             <TextBlock
                 Grid.Row="0"
                 x:Uid="Login_Title"
-                Style="{StaticResource PageTitleStyle}" />
+                Style="{StaticResource PageTitleStyle}"
+                VerticalAlignment="Top"/>
         </StackPanel>
 
         <Grid Grid.Row="1">
             <WebView2 
-                x:Name="webView2"
+                x:Name="webView2"                
                 Source="https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fwww.youtube.com"
                 NavigationCompleted="webView2_NavigationCompleted"
                 WebMessageReceived="webView2_WebMessageReceived"/>

@@ -1,6 +1,8 @@
-﻿namespace VidSync.ViewModels;
+﻿using System.Net;
 
-public partial class SettingsViewModel : BaseViewModel
+namespace VidSync.ViewModels;
+
+public partial class SettingsViewModel : BaseViewModel, INavigationAware
 {
     private readonly IThemeSelectorService _themeSelectorService;
 
@@ -52,5 +54,35 @@ public partial class SettingsViewModel : BaseViewModel
     {
         if (NavigationService.CanGoBack)
             NavigationService.GoBack();
+    }
+
+    [RelayCommand]
+    private void GotoLoginPage()
+    {
+        NavigationService.NavigateTo(typeof(LoginViewModel).FullName!.ToString(), null);
+    }
+
+    public void OnNavigatedTo(object parameter)
+    {
+        if(parameter is not null)
+        {
+            var cookies = parameter as IReadOnlyList<Cookie>;
+
+            if (cookies!.Count > 0)
+            {
+                IsLoggedIn = true;
+                LoggedInMessage = "You're already signed in. Dive into the app and make the most of your experience!";
+            }
+            else
+            {
+                IsLoggedIn = false;
+                LoggedInMessage = "You're not signed in. Sign in to explore videos and channels tailored to your interests.";
+            }
+        }
+    }
+
+    public void OnNavigatedFrom()
+    {
+        //throw new NotImplementedException();
     }
 }

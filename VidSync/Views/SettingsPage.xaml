@@ -12,7 +12,7 @@
         <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
     </Page.Resources>
     
-    <Grid Padding="5">
+    <Grid Padding="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="48" />
             <RowDefinition Height="*" />
@@ -31,12 +31,11 @@
                 x:Uid="Settings_Title"
                 Style="{StaticResource PageTitleStyle}"
                 VerticalAlignment="Top"/>
-
         </StackPanel>
         <StackPanel
             Grid.Row="1" 
             x:Name="ContentArea"
-            Padding="10,0,10,0">
+            Padding="15,0,10,0">
             <TextBlock x:Uid="Settings_Personalization" Style="{ThemeResource SubtitleTextBlockStyle}" />
             <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
                 <TextBlock x:Uid="Settings_Theme" />
@@ -79,7 +78,6 @@
 
             <StackPanel Margin="{StaticResource XSmallTopMargin}">
                 <TextBlock Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" Style="{ThemeResource BodyTextBlockStyle}" />
-
                 <TextBlock
                     x:Uid="Settings_AboutDescription"
                     Margin="{StaticResource XSmallTopMargin}"
@@ -111,7 +109,15 @@
                             </StackPanel>
                         </HyperlinkButton.Content>
                     </HyperlinkButton>
-                </StackPanel>               
+                </StackPanel>
+                <StackPanel Margin="{StaticResource XSmallTopMargin}" Spacing="5">
+                    <TextBlock Text="Youtube Information" Style="{ThemeResource SubtitleTextBlockStyle}" />
+                    <TextBlock Text="You're not signed in. Sign in to explore videos and channels tailored to your interests." Visibility="{x:Bind ViewModel.IsNotLoggedIn}"/>
+                    <Button Content="Sign In with YouTube" Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}" Command="{x:Bind ViewModel.GotoLoginPageCommand}"/>
+                    <TextBlock Text="You're already signed in. Dive into the app and make the most of your experience!" Visibility="{x:Bind ViewModel.IsLoggedIn}"/>
+                    <Button Content="Sign Out" Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}"/>
+                    <TextBlock Text="{x:Bind ViewModel.Cookies.Count}"/>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Grid>

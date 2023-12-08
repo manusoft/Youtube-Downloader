@@ -24,6 +24,17 @@
             HorizontalAlignment="Center"
             Height="50"
             Width="50"/>
+        <SymbolIcon 
+            Symbol="Clear" 
+            VerticalAlignment="Center" 
+            Foreground="Red"
+            HorizontalAlignment="Center"
+            Visibility="{x:Bind ViewModel.IsAnalyzeError, Mode=OneWay}"/>
+        <TextBlock 
+            Text="Invalid YouTube video ID or URL" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center"
+            Visibility="{x:Bind ViewModel.IsAnalyzeError, Mode=OneWay}"/>
         <Grid ColumnSpacing="5" Visibility="{x:Bind ViewModel.IsAnalyzed, Mode=OneWay}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150"/>
@@ -49,7 +60,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBox 
                     Grid.Column="0" 
-                    IsEnabled="False"
+                    IsReadOnly="True"
                     Header="Save to:" 
                     PlaceholderText="c:\downloads\" 
                     Text="{x:Bind ViewModel.LocalPath, Mode=TwoWay}" 
@@ -60,9 +71,8 @@
                 Header="Video Quality:" 
                 Width="150"
                 ItemsSource="{x:Bind ViewModel.Qualities, Mode=OneWay}"
-                SelectedValue="720p"
-                SelectedItem="{x:Bind ViewModel.SelectedQuality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-            </ComboBox>
+                SelectedItem="{x:Bind ViewModel.SelectedQuality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="(If left blank, the highest quality will be selected automatically.)" Foreground="Gray"/>
         </StackPanel>
     </StackPanel>
 </ContentDialog>
