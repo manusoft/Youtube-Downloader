@@ -5,6 +5,7 @@ namespace VidSync.Views;
 
 public sealed partial class LoginPage : Page
 {
+    private Uri loginUri = new Uri("https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fwww.youtube.com");
     public LoginViewModel ViewModel { get; }
 
     public LoginPage()
@@ -15,32 +16,38 @@ public sealed partial class LoginPage : Page
 
     private async void webView2_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
     {
-
-        // Check if there are cookies
-        var cookiesTask = await webView2.CoreWebView2.CookieManager.GetCookiesAsync("http://www.youtube.com");
-
-        if (cookiesTask.Count > 0)
+        if(args.IsSuccess)
         {
-            // The user is logged in
-            Console.WriteLine("User is logged in.");
-        }
-        else
-        {
-            // The user is not logged in
-            Console.WriteLine("User is not logged in.");
+            // Check if there are cookies
+            var cookiesTask = await webView2.CoreWebView2.CookieManager.GetCookiesAsync("http://www.youtube.com");
 
-            // Set the source to the login page
-            webView2.Source = new Uri("https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fwww.youtube.com");
-        }
+            if (cookiesTask.Count > 0)
+            {
+                // The user is logged in
+                Console.WriteLine("User is logged in.");
 
-        // Execute JavaScript to get cookies
-        string cookiesScript = @"
-                (function() {
-                    var cookies = document.cookie;
-                    window.chrome.webview.postMessage({ cookies: cookies });
-                })();";
+                //// Execute JavaScript to get cookies
+                //string cookiesScript = @"
+                //(function() {
+                //    var cookies = document.cookie;
+                //    window.chrome.webview.postMessage({ cookies: cookies });
+                //})();";
 
-        await webView2.CoreWebView2.ExecuteScriptAsync(cookiesScript);
+                //await webView2.CoreWebView2.ExecuteScriptAsync(cookiesScript);
+            }
+            else
+            {
+                // The user is not logged in
+                Console.WriteLine("User is not logged in.");
+
+                // Check if the current source is different from the login URI
+                if (webView2.Source != loginUri)
+                {
+                    // Set the source to the login page only if it's not the current source
+                    webView2.Source = loginUri;
+                }
+            }            
+        }        
     }
 
     private void webView2_WebMessageReceived(WebView2 sender, CoreWebView2WebMessageReceivedEventArgs args)
@@ -58,9 +65,10 @@ public sealed partial class LoginPage : Page
                     // Check if the "cookies" property is present
                     if (jsonDocument.RootElement.TryGetProperty("cookies", out var cookiesElement))
                     {
-                        string cookies = cookiesElement.GetString();
+                        string cookies = cookiesElement.GetString()!;
 
-                        if (cookies != null && cookies.StartsWith("SID=")) // Adjust the condition based on your actual cookie format
+                        // Adjust the cookie parsing based on your actual cookie format and requirements
+                        if (!string.IsNullOrEmpty(cookies) && cookies.StartsWith("SID=")) 
                         {
                             string[] cookieParts = cookies.Split(';');
 
@@ -84,7 +92,7 @@ public sealed partial class LoginPage : Page
                             }
 
                             // Update ViewModel with the collected cookies
-                            ViewModel.CookieManager.SaveCookies(cookieCollection);
+                            ViewModel.CookieManager.SaveCookies(cookieCollection);                            
                         }
                     }
                 }

@@ -11,7 +11,7 @@ public class CookieManager : ICookieManager
             if (File.Exists(CookiesFileName))
             {
                 string json = File.ReadAllText(CookiesFileName);
-                return System.Text.Json.JsonSerializer.Deserialize<List<System.Net.Cookie>>(json);
+                return System.Text.Json.JsonSerializer.Deserialize<List<System.Net.Cookie>>(json)!;
             }
         }
         catch (Exception ex)

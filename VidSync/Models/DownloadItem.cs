@@ -18,7 +18,7 @@ public class DownloadItem : ObservableObject
     private string _progressText;
     public string ProgressText
     {
-        get { return _progressText; }
+        get { return _progressText!; }
         set { SetProperty(ref _progressText, value); }
     }
 
@@ -62,7 +62,7 @@ public class DownloadItem : ObservableObject
 
     [NotMapped]
     [System.Text.Json.Serialization.JsonIgnore]
-    public CancellationTokenSource CancellationTokenSource { get; set; }
+    public CancellationTokenSource? CancellationTokenSource { get; set; }
 
     private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
     {
@@ -76,7 +76,7 @@ public class DownloadItem : ObservableObject
     private BitmapImage GetImage()
     {
         var bitmap = new BitmapImage();
-        bitmap.UriSource = new Uri(ImageUrl);
+        bitmap.UriSource = new Uri(ImageUrl!);
         return bitmap;
     }
 }
