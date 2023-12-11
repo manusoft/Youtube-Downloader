@@ -92,7 +92,7 @@ public sealed partial class LoginPage : Page
                             }
 
                             // Update ViewModel with the collected cookies
-                            ViewModel.CookieManager.SaveCookies(cookieCollection);                            
+                            ViewModel.CookieManager.SaveCookiesAsync(cookieCollection);                            
                         }
                     }
                 }

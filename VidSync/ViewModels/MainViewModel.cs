@@ -15,16 +15,47 @@ public partial class MainViewModel : BaseViewModel
     private async void InitializeAsync()
     {
         await LoadDownloadListAsync();
-        CheckDownloads();
-        GetCookies();
+        await CheckDownloadsAsync();
+        await GetCookiesAsync();
     }
 
-    private void GetCookies()
+    private async Task CheckDownloadsAsync()
+    {
+        try
+        {
+            foreach (var item in DownloadItems)
+            {
+                if (item.ProgressText == "Completed" || item.ProgressText == "100%")
+                {
+                    item.IsError = false;
+                    item.IsDownloading = false;
+                    item.IsCompleted = true;
+                    item.ProgressText = "Completed";
+                }
+                else
+                {
+                    item.IsError = true;
+                    item.IsDownloading = false;
+                    item.IsCompleted = false;
+                    item.ProgressText = "Retry";
+                }
+
+            }
+
+            await Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task GetCookiesAsync()
     {
         try
         {
             // Load cookies
-            List<Cookie> storedCookies = CookieManager.LoadCookies();
+            List<Cookie> storedCookies = await CookieManager.LoadCookiesAsync();
 
             // Use the cookies (e.g., set them in the WebView2 control)
             Cookies = storedCookies;
@@ -135,35 +166,6 @@ public partial class MainViewModel : BaseViewModel
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-        }
-    }
-
-    private void CheckDownloads()
-    {
-        try
-        {
-            foreach (var item in DownloadItems)
-            {
-                if (item.ProgressText == "Completed" || item.ProgressText == "100%")
-                {
-                    item.IsError = false;
-                    item.IsDownloading = false;
-                    item.IsCompleted = true;
-                    item.ProgressText = "Completed";
-                }
-                else
-                {
-                    item.IsError = true;
-                    item.IsDownloading = false;
-                    item.IsCompleted = false;
-                    item.ProgressText = "Retry";
-                }
-
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
         }
     }
 
