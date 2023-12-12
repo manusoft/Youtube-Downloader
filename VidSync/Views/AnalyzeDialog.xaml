@@ -72,7 +72,7 @@
                 Width="150"
                 ItemsSource="{x:Bind ViewModel.Qualities, Mode=OneWay}"
                 SelectedItem="{x:Bind ViewModel.SelectedQuality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Text="(If left blank, the highest quality will be selected automatically.)" Foreground="Gray"/>
+            <TextBlock Text="(If left blank, the highest quality will be selected automatically)" Foreground="Gray"/>
         </StackPanel>
     </StackPanel>
 </ContentDialog>

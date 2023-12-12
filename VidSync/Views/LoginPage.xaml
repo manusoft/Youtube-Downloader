@@ -33,7 +33,8 @@
                 x:Name="webView2"                
                 Source="https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fwww.youtube.com"
                 NavigationCompleted="webView2_NavigationCompleted"
-                WebMessageReceived="webView2_WebMessageReceived"/>
+                WebMessageReceived="webView2_WebMessageReceived"
+                NavigationStarting="webView2_NavigationStarting"/>
         </Grid>
 
     </Grid>

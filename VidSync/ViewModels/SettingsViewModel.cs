@@ -62,22 +62,25 @@ public partial class SettingsViewModel : BaseViewModel, INavigationAware
         NavigationService.NavigateTo(typeof(LoginViewModel).FullName!.ToString(), null);
     }
 
+    [RelayCommand]
+    private void Signout()
+    {
+        var result = CookieManager.DeleteCookiesAsync();
+
+        if (result)
+            IsLoggedIn = false;
+    }
+
     public void OnNavigatedTo(object parameter)
     {
-        if(parameter is not null)
+        if (parameter is not null)
         {
             var cookies = parameter as IReadOnlyList<Cookie>;
 
             if (cookies!.Count > 0)
-            {
                 IsLoggedIn = true;
-                LoggedInMessage = "You're already signed in. Dive into the app and make the most of your experience!";
-            }
             else
-            {
                 IsLoggedIn = false;
-                LoggedInMessage = "You're not signed in. Sign in to explore videos and channels tailored to your interests.";
-            }
         }
     }
 

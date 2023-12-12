@@ -23,15 +23,12 @@ public partial class BaseViewModel : ObservableRecipient
     private bool isAnalyzeError;
 
     [ObservableProperty]
-    private string errorMessage;
+    private string errorMessage = string.Empty;
 
     [ObservableProperty, NotifyPropertyChangedFor(nameof(IsNotLoggedIn))]
     private bool isLoggedIn;
 
-    public bool IsNotLoggedIn => !IsLoggedIn;
-
-    [ObservableProperty]
-    private string loggedInMessage;
+    public bool IsNotLoggedIn => !IsLoggedIn;   
 
     [ObservableProperty]
     private IReadOnlyList<Cookie> cookies = null!;

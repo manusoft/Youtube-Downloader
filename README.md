@@ -1,8 +1,9 @@
 # VidSync - YouTube Download Manager
 <p align="left"><img src="https://visitor-badge.laobi.icu/badge?page_id=manusoft.Youtube-Downloader" alt="visitor" style="max-width: 100%;"></p>
 
-![Screenshot 2023-12-11 231553](https://github.com/manusoft/Youtube-Downloader/assets/83714923/887120b3-3889-4430-9fbc-291c3268a0d7)
+![Screenshot 2023-12-11 234812](https://github.com/manusoft/Youtube-Downloader/assets/83714923/56cfe041-ebb4-40d6-af06-d9cda0350da4)
 ![Screenshot 2023-12-11 231740](https://github.com/manusoft/Youtube-Downloader/assets/83714923/55dc7bec-bcda-4bcc-b91e-568a5f11673b)
+![Screenshot 2023-12-11 234236](https://github.com/manusoft/Youtube-Downloader/assets/83714923/bb04f3da-bf8d-43f2-a18b-4a33049b5c14)
 
 
 VidSync is a powerful YouTube download manager built with WinUI 3. It allows you to download multiple YouTube videos simultaneously, manage your download list, remove completed downloads, open the download folder, and enjoy a seamless experience with dark and night modes.
