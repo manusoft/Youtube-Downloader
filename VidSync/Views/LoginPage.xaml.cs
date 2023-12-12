@@ -6,12 +6,15 @@ namespace VidSync.Views;
 public sealed partial class LoginPage : Page
 {
     private Uri loginUri = new Uri("https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fwww.youtube.com");
+    private bool loggedIn = false;
+
     public LoginViewModel ViewModel { get; }
 
     public LoginPage()
     {
         ViewModel = App.GetService<LoginViewModel>();
         InitializeComponent();
+        webView2.Source = loginUri;
     }
 
     private async void webView2_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
@@ -39,19 +42,21 @@ public sealed partial class LoginPage : Page
                         cookieCollection.Add(cookie);
                 }
 
+                loggedIn = true;
+
                 // Update ViewModel with the collected cookies
                 await ViewModel.CookieManager.SaveCookiesAsync(cookieCollection);
 
                 ViewModel.GotoBackCommand.Execute(null);
-
             }
             else
             {
+                loggedIn = false;
                 // The user is not logged in
                 Console.WriteLine("User is not logged in.");
 
                 // Check if the current source is different from the login URI
-                if (webView2.Source != loginUri)
+                if (webView2.Source is null)
                 {
                     // Set the source to the login page only if it's not the current source
                     webView2.Source = loginUri;
@@ -100,6 +105,8 @@ public sealed partial class LoginPage : Page
                                     cookieCollection.Add(cookie);
                                 }
                             }
+
+                            loggedIn = true;
 
                             // Update ViewModel with the collected cookies
                             await ViewModel.CookieManager.SaveCookiesAsync(cookieCollection);
