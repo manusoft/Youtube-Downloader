@@ -111,7 +111,7 @@
                     </HyperlinkButton>
                 </StackPanel>
                 <StackPanel Margin="{StaticResource XSmallTopMargin}" Spacing="5">
-                    <TextBlock Text="Youtube Information" Style="{ThemeResource SubtitleTextBlockStyle}" />
+                    <TextBlock Text="YouTube Information" Style="{ThemeResource SubtitleTextBlockStyle}" />
                     <TextBlock Text="You're not signed in. Sign in to explore videos and channels tailored to your interests." Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}"/>
                     <Button Content="Sign In with YouTube" Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}" Command="{x:Bind ViewModel.GotoLoginPageCommand}"/>
                     <TextBlock Text="You're already signed in. Dive into the app and make the most of your experience!" Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}"/>
