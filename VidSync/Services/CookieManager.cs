@@ -37,4 +37,22 @@ public class CookieManager : ICookieManager
             Console.WriteLine($"Error saving cookies: {ex.Message}");
         }
     }
+
+    public bool DeleteCookiesAsync()
+    {
+        try
+        {
+            if (File.Exists(CookiesFileName))
+            {
+                File.Delete(CookiesFileName);    
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error delete cookies: {ex.Message}");
+        }
+
+        return false;
+    }
 }

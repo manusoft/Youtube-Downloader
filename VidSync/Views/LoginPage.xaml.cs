@@ -16,7 +16,7 @@ public sealed partial class LoginPage : Page
 
     private async void webView2_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
     {
-        if(args.IsSuccess)
+        if (args.IsSuccess)
         {
             // Check if there are cookies
             var cookiesTask = await webView2.CoreWebView2.CookieManager.GetCookiesAsync("http://www.youtube.com");
@@ -25,15 +25,25 @@ public sealed partial class LoginPage : Page
             {
                 // The user is logged in
                 Console.WriteLine("User is logged in.");
+                var cookieCollection = new List<System.Net.Cookie>();
 
-                //// Execute JavaScript to get cookies
-                //string cookiesScript = @"
-                //(function() {
-                //    var cookies = document.cookie;
-                //    window.chrome.webview.postMessage({ cookies: cookies });
-                //})();";
+                foreach (var cookieString in cookiesTask)
+                {
+                        var cookie = new System.Net.Cookie
+                        {
+                            Name = cookieString.Name,
+                            Value = cookieString.Value,
+                            Domain = webView2.Source.Host,
+                            Path = webView2.Source.AbsolutePath
+                        };
+                        cookieCollection.Add(cookie);
+                }
 
-                //await webView2.CoreWebView2.ExecuteScriptAsync(cookiesScript);
+                // Update ViewModel with the collected cookies
+                await ViewModel.CookieManager.SaveCookiesAsync(cookieCollection);
+
+                ViewModel.GotoBackCommand.Execute(null);
+
             }
             else
             {
@@ -46,11 +56,11 @@ public sealed partial class LoginPage : Page
                     // Set the source to the login page only if it's not the current source
                     webView2.Source = loginUri;
                 }
-            }            
-        }        
+            }
+        }
     }
 
-    private void webView2_WebMessageReceived(WebView2 sender, CoreWebView2WebMessageReceivedEventArgs args)
+    private async void webView2_WebMessageReceived(WebView2 sender, CoreWebView2WebMessageReceivedEventArgs args)
     {
         try
         {
@@ -68,7 +78,7 @@ public sealed partial class LoginPage : Page
                         string cookies = cookiesElement.GetString()!;
 
                         // Adjust the cookie parsing based on your actual cookie format and requirements
-                        if (!string.IsNullOrEmpty(cookies) && cookies.StartsWith("SID=")) 
+                        if (!string.IsNullOrEmpty(cookies) && cookies.StartsWith("SID="))
                         {
                             string[] cookieParts = cookies.Split(';');
 
@@ -92,7 +102,9 @@ public sealed partial class LoginPage : Page
                             }
 
                             // Update ViewModel with the collected cookies
-                            ViewModel.CookieManager.SaveCookiesAsync(cookieCollection);                            
+                            await ViewModel.CookieManager.SaveCookiesAsync(cookieCollection);
+
+                            ViewModel.GotoBackCommand.Execute(null);
                         }
                     }
                 }
@@ -102,5 +114,10 @@ public sealed partial class LoginPage : Page
         {
             Console.WriteLine(ex.Message);
         }
+    }
+
+    private void webView2_NavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
+    {
+        Console.WriteLine(args.Uri.ToString());
     }
 }

@@ -2,7 +2,7 @@
 
 namespace VidSync.ViewModels;
 
-public partial class MainViewModel : BaseViewModel
+public partial class MainViewModel : BaseViewModel, INavigationAware
 {
     private int maxConcurrentDownloads = 2;
     private SemaphoreSlim downloadSemaphore = new SemaphoreSlim(2);
@@ -16,7 +16,6 @@ public partial class MainViewModel : BaseViewModel
     {
         await LoadDownloadListAsync();
         await CheckDownloadsAsync();
-        await GetCookiesAsync();
     }
 
     private async Task CheckDownloadsAsync()
@@ -48,35 +47,7 @@ public partial class MainViewModel : BaseViewModel
         {
             Console.WriteLine(ex.Message);
         }
-    }
-
-    private async Task GetCookiesAsync()
-    {
-        try
-        {
-            // Load cookies
-            List<Cookie> storedCookies = await CookieManager.LoadCookiesAsync();
-
-            // Use the cookies (e.g., set them in the WebView2 control)
-            Cookies = storedCookies;
-
-            if(Cookies.Count > 0)
-            {
-                IsLoggedIn = true;
-                LoggedInMessage = "You're already signed in. Dive into the app and make the most of your experience!";
-            }
-            else
-            {
-                IsLoggedIn = false;
-                LoggedInMessage = "You're not signed in. Sign in to explore videos and channels tailored to your interests.";
-            }
-                
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
+    }  
 
     public async Task AnalyzeVideoLinkAsync()
     {
@@ -406,6 +377,38 @@ public partial class MainViewModel : BaseViewModel
 
             App.MainWindow.BringToFront();
         });
+    }
+
+    public async void OnNavigatedTo(object parameter)
+    {
+        await GetCookiesAsync();
+    }
+
+    public void OnNavigatedFrom()
+    {
+        //throw new NotImplementedException();
+    }
+
+    private async Task GetCookiesAsync()
+    {
+        try
+        {
+            // Load cookies
+            List<Cookie> storedCookies = await CookieManager.LoadCookiesAsync();
+
+            // Use the cookies (e.g., set them in the WebView2 control)
+            Cookies = storedCookies;
+
+            if (Cookies.Count > 0)
+                IsLoggedIn = true;
+            else
+                IsLoggedIn = false;
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 
     public ObservableCollection<DownloadItem> DownloadItems { get; set; } = new ObservableCollection<DownloadItem>();

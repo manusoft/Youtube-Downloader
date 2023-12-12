@@ -6,5 +6,6 @@ namespace VidSync.Contracts.Services
     {
         Task<List<Cookie>> LoadCookiesAsync();
         Task SaveCookiesAsync(List<Cookie> cookies);
+        bool DeleteCookiesAsync();
     }
 }

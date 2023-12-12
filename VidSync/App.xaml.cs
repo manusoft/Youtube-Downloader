@@ -45,9 +45,9 @@ public partial class App : Application
             services.AddSingleton<IFileService, FileService>();
 
             // Views and ViewModels
-            services.AddTransient<LoginViewModel>();
+            services.AddSingleton<LoginViewModel>();
             services.AddTransient<LoginPage>();
-            services.AddTransient<SettingsViewModel>();
+            services.AddSingleton<SettingsViewModel>();
             services.AddTransient<SettingsPage>();
             services.AddSingleton<MainViewModel>();
             services.AddTransient<MainPage>();
