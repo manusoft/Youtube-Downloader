@@ -14,6 +14,8 @@
 	<UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <PackageCertificateThumbprint>210439427BB098B4FAF60E5BA445A2C0E97C4B0D</PackageCertificateThumbprint>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <ItemGroup>
 	<Content Include="Assets\ko-fi.png" />

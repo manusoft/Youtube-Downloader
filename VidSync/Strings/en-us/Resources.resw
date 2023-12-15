@@ -121,7 +121,7 @@
     <value>VidSync</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>VidSync</value>
+    <value>VidSync - YouTube video download manager</value>
   </data>
   <data name="Main_Title.Text" xml:space="preserve">
     <value>Main</value>
@@ -146,7 +146,7 @@
     <value>About this application</value>
   </data>
   <data name="Settings_AboutDescription.Text" xml:space="preserve">
-    <value>Youtube video download manager</value>
+    <value>YouTube video download manager from LAdev.</value>
   </data>
   <data name="SettingsPage_PrivacyTermsLink.Content" xml:space="preserve">
     <value>Privacy Statement</value>
