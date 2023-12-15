@@ -12,14 +12,14 @@
 
   <Identity
     Name="f32147cd-1926-40d5-b270-32d0c0e0d053"
-    Publisher="CN=manua"
+    Publisher="CN=LA Software, O=LAdev, C=IN"
     Version="1.0.1.0" />
     
   <mp:PhoneIdentity PhoneProductId="f32147cd-1926-40d5-b270-32d0c0e0d053" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
     
   <Properties>
     <DisplayName>VidSync</DisplayName>
-    <PublisherDisplayName>Laskya Solutions</PublisherDisplayName>
+    <PublisherDisplayName>LAdev</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
