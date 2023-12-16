@@ -40,10 +40,24 @@
                 Orientation="Horizontal">
                 <Image
                     Margin="5"
-                    Source="/Assets/youtube.png"
+                    Source="/Assets/vidsync.png"
                     Height="32"
-                    Width="32"/>
-                <TextBlock Text="VidSync" FontSize="25" FontWeight="Bold" />
+                    Width="32"
+                    ToolTipService.ToolTip="VidSync - Youtube video download manager"/>
+                <TextBlock 
+                    Margin="5" 
+                    Text="VidSync" 
+                    FontSize="25" 
+                    FontWeight="Bold" 
+                    ToolTipService.ToolTip="VidSync - Youtube video download manager">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush MappingMode="Absolute" StartPoint="0,0" EndPoint="0,20">
+                            <GradientStop Color="#fd7d32" Offset="0.0"/>
+                            <GradientStop Color="#fb6135" Offset="0.50"/>
+                            <GradientStop Color="#f94638" Offset="1"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
             </StackPanel>
             <StackPanel
                 Grid.Column="1"
@@ -64,12 +78,14 @@
                     Icon="Account" 
                     LabelPosition="Collapsed"
                     Command="{x:Bind ViewModel.GotoLoginPageCommand}"
-                    Width="40"/>
+                    Width="40"
+                    ToolTipService.ToolTip="Login to Youtube"/>
                 <AppBarButton 
                     Icon="Setting" 
                     LabelPosition="Collapsed"
                     Command="{x:Bind ViewModel.GotoSettingsPageCommand}"
-                    Width="40"/>
+                    Width="40"
+                    ToolTipService.ToolTip="Settings"/>
             </StackPanel>
         </Grid>
 
@@ -241,7 +257,10 @@
                     Visibility="{x:Bind ViewModel.DownloadItems.Count, Mode=OneWay, Converter={StaticResource IntegerToVisibility}}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
-                <SymbolIcon Symbol="Download" VerticalAlignment="Center" Foreground="Red" />
+                <Image
+                     Source="/Assets/splash.png"
+                     Height="75"
+                     Width="75"/>
                 <TextBlock Text="No download tasks." HorizontalAlignment="Center" Foreground="Gray" VerticalAlignment="Center"/>
                 <TextBlock Text="Add some URL to see downloads here." HorizontalAlignment="Center" Foreground="Gray" VerticalAlignment="Center"/>
             </StackPanel>

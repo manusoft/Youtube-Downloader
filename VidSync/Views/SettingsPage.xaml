@@ -97,15 +97,15 @@
                         </HyperlinkButton.Content>
                     </HyperlinkButton>
 
-                    <HyperlinkButton Margin="0,5" NavigateUri="mailto:me@manojbabu.in">
+                    <HyperlinkButton Margin="0,5" NavigateUri="https://manojbabu.in">
                         <HyperlinkButton.Content>
                             <StackPanel 
                                  Spacing="5"
                                  Orientation="Horizontal">
                                 <Viewbox Height="16" Width="16">
-                                    <SymbolIcon Symbol="Mail" Foreground="MediumOrchid"/>
+                                    <SymbolIcon Symbol="Globe" Foreground="MediumOrchid"/>
                                 </Viewbox>
-                                <TextBlock Text="Send an email" VerticalAlignment="Center" />
+                                <TextBlock Text="About me!" VerticalAlignment="Center" />
                             </StackPanel>
                         </HyperlinkButton.Content>
                     </HyperlinkButton>

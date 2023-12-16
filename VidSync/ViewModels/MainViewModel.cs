@@ -328,7 +328,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
         }
         else
         {
-            ShowMessageBox("Already logged in", "Login");
+            ShowMessageBox("You're already signed in. Dive into the app and make the most of your experience!", "VidSync");
         }
     }
 
