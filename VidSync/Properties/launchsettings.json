@@ -1,9 +1,9 @@
 ﻿{
     "profiles": {
-      "VidSync (Package)": {
+      "TubeSync (Package)": {
         "commandName": "MsixPackage"
       },
-      "VidSync (Unpackaged)": {
+      "TubeSync (Unpackaged)": {
         "commandName": "Project"
       }
     }

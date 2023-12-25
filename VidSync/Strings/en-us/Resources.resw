@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>VidSync</value>
+    <value>TubeSync</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>VidSync - YouTube video download manager</value>
+    <value>TubeSync - YouTube video download manager</value>
   </data>
   <data name="Main_Title.Text" xml:space="preserve">
     <value>Main</value>
@@ -168,7 +168,7 @@
     &lt;/binding&gt;
   &lt;/visual&gt;
   &lt;actions&gt;
-    &lt;action content="Rate VidSync" arguments="action=Rate"/&gt;
+    &lt;action content="Rate TubeSync" arguments="action=Rate"/&gt;
   &lt;/actions&gt;
 &lt;/toast&gt;</value>
   </data>
