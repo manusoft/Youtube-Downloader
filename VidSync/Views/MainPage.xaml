@@ -43,13 +43,13 @@
                     Source="/Assets/vidsync.png"
                     Height="32"
                     Width="32"
-                    ToolTipService.ToolTip="VidSync - Youtube video download manager"/>
+                    ToolTipService.ToolTip="TubeSync - Youtube video download manager"/>
                 <TextBlock 
                     Margin="5" 
-                    Text="VidSync" 
+                    Text="TubeSync" 
                     FontSize="25" 
                     FontWeight="Bold" 
-                    ToolTipService.ToolTip="VidSync - Youtube video download manager">
+                    ToolTipService.ToolTip="TubeSync - Youtube video download manager">
                     <TextBlock.Foreground>
                         <LinearGradientBrush MappingMode="Absolute" StartPoint="0,0" EndPoint="0,20">
                             <GradientStop Color="#fd7d32" Offset="0.0"/>
@@ -253,7 +253,7 @@
                 </ListView.ItemTemplate>
             </ListView>
             <StackPanel 
-                    Spacing="10"
+                    Spacing="5"
                     Visibility="{x:Bind ViewModel.DownloadItems.Count, Mode=OneWay, Converter={StaticResource IntegerToVisibility}}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">

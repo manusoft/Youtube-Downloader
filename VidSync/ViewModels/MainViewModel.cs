@@ -328,7 +328,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
         }
         else
         {
-            ShowMessageBox("You're already signed in. Dive into the app and make the most of your experience!", "VidSync");
+            ShowMessageBox("You're already signed in. Dive into the app and make the most of your experience!", "TubeSync");
         }
     }
 
@@ -341,7 +341,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
     {
         try
         {
-            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "vidsync.json");
+            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "tubesync.json");
             var jsonString = System.Text.Json.JsonSerializer.Serialize(DownloadItems);
             File.WriteAllText(filePath, jsonString);
         }
@@ -355,7 +355,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
     {
         try
         {
-            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "vidsync.json");
+            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "tubesync.json");
 
             if (File.Exists(filePath))
             {
