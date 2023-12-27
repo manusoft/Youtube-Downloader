@@ -460,4 +460,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
     [ObservableProperty]
     private double progressChanged;
 
+    [ObservableProperty]
+    private string localPath = AppContants.DownloadPath;
+
 }
