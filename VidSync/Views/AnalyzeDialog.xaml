@@ -62,7 +62,6 @@
                     Grid.Column="0" 
                     IsReadOnly="True"
                     Header="Save to:" 
-                    PlaceholderText="c:\downloads\" 
                     Text="{x:Bind ViewModel.LocalPath, Mode=TwoWay}" 
                     HorizontalContentAlignment="Stretch"/>
                 <Button Grid.Column="1" VerticalAlignment="Bottom">...</Button>
