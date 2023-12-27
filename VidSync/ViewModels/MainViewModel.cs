@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using TubeSync;
 
 namespace VidSync.ViewModels;
 
@@ -47,7 +48,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
         {
             Console.WriteLine(ex.Message);
         }
-    }  
+    }
 
     public async Task AnalyzeVideoLinkAsync()
     {
@@ -74,7 +75,6 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
                 Qualities.Add(item.VideoQuality.Label);
             }
 
-
             ThumbnailUrl = video.Thumbnails.LastOrDefault()!.Url;
 
             bitmap.UriSource = new Uri(ThumbnailUrl);
@@ -84,7 +84,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
             VideoDuration = video.Duration!.Value.ToString();
             VideoThumbnail = bitmap;
             SelectedQuality = Qualities.LastOrDefault()!.ToString();
-            IsAnalyzed = true;            
+            IsAnalyzed = true;
         }
         catch (Exception ex)
         {
@@ -123,7 +123,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
                 VideoCodec = videoPlayerStream.VideoCodec,
                 VideoInfo = $"{videoPlayerStream.VideoResolution.Width}x{videoPlayerStream.VideoResolution.Height} {videoPlayerStream.VideoQuality.Framerate}fps",
                 RemoteUrl = videoPlayerStream.Url,
-                LocalPath = LocalPath,
+                LocalPath = AppContants.DownloadPath,
                 CreatedAt = DateTime.Now,
                 CancellationTokenSource = new CancellationTokenSource(),
             };
@@ -149,8 +149,8 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
             await downloadSemaphore.WaitAsync();
 
             var downloadTasks = DownloadItems
-            .Where(item => !item.IsCompleted && !item.IsDownloading)
-            .Select(item => StartDownloadItemAsync(item));
+                .Where(item => !item.IsCompleted && !item.IsDownloading)
+                .Select(item => StartDownloadItemAsync(item));
 
             await Task.WhenAll(downloadTasks);
         }
@@ -182,29 +182,6 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
         }
     }
 
-    [RelayCommand]
-    private void StopDownload(DownloadItem item)
-    {
-        try
-        {
-            if (item.IsDownloading)
-            {
-                // Cancel the download operation associated with the DownloadItem
-                item.CancellationTokenSource?.Cancel();
-
-                // Update the item's properties to reflect the cancellation
-                item.IsDownloading = false;
-                item.IsCompleted = false;
-                item.IsError = true;
-                item.ProgressText = "Cancelled";
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex.Message);
-        }
-    }
-
     private async Task DownloadItemAsync(DownloadItem download, CancellationToken cancellationToken)
     {
         try
@@ -215,7 +192,9 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
 
             var saveFileName = PathExtension.ConvertToValidFileName(download.Title);
 
-            var destinationFilePath = $"{download.LocalPath}\\{saveFileName}.mp4";
+            var destinationFilePath = $"{AppContants.DownloadPath}\\{saveFileName}.mp4";
+
+            download.LocalPath = destinationFilePath;
 
             using (var client = new DownloadService(downloadFileUrl!, destinationFilePath))
             {
@@ -277,12 +256,50 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
     }
 
     [RelayCommand]
+    private void StopDownload(DownloadItem item)
+    {
+        try
+        {
+            if (item.IsDownloading)
+            {
+                // Cancel the download operation associated with the DownloadItem
+                item.CancellationTokenSource?.Cancel();
+
+                // Update the item's properties to reflect the cancellation
+                item.IsDownloading = false;
+                item.IsCompleted = false;
+                item.IsError = true;
+                item.ProgressText = "Cancelled";
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
+    }
+
+    [RelayCommand]
     private void DeleteItem(DownloadItem item)
     {
+        if (item is null) return;
+
         try
         {
             DownloadItems.Remove(item);
             SaveDownloadList();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
+    }
+
+    [RelayCommand]
+    private void OpenFolder()
+    {
+        try
+        {
+            Process.Start("explorer.exe", AppContants.DownloadPath);
         }
         catch (Exception ex)
         {
@@ -322,7 +339,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
     [RelayCommand]
     private void GotoLoginPage()
     {
-        if(Cookies.Count == 0)
+        if (Cookies.Count == 0)
         {
             NavigationService.NavigateTo(typeof(LoginViewModel).FullName!.ToString(), null);
         }
@@ -374,7 +391,6 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
         App.MainWindow.DispatcherQueue.TryEnqueue(() =>
         {
             App.MainWindow.ShowMessageDialogAsync(content, title);
-
             App.MainWindow.BringToFront();
         });
     }
@@ -434,9 +450,6 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
 
     [ObservableProperty]
     private string videoDuration = string.Empty;
-
-    [ObservableProperty]
-    private string localPath = Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + @"Downloads\";
 
     [ObservableProperty]
     private IEnumerable<MuxedStreamInfo>? streamInfo;
