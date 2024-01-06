@@ -29,6 +29,17 @@ public partial class SettingsViewModel : BaseViewModel, INavigationAware
                     await _themeSelectorService.SetThemeAsync(param);
                 }
             });
+
+        // Read value from local settings
+        object maxParallelTasksValue = ApplicationData.Current.LocalSettings.Values["MaxParallelTasks"];
+
+        // Check if the value is present and cast it to an int
+        if (maxParallelTasksValue != null && maxParallelTasksValue is int maxParallelTasks)
+        {
+            // Now 'maxParallelTasks' contains the value you stored in local settings
+            // Use it as needed in your application logic
+            SelectedDownloadCount = maxParallelTasks - 1;
+        }
     }
 
     private static string GetVersionDescription()
@@ -88,4 +99,25 @@ public partial class SettingsViewModel : BaseViewModel, INavigationAware
     {
         //throw new NotImplementedException();
     }
+
+    public void OnDownloadCountComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ComboBox comboBox)
+        {
+            if (comboBox.SelectedItem is ComboBoxItem selectedComboBoxItem)
+            {
+                // Access the selected value directly
+                int selectedValue = int.Parse(selectedComboBoxItem.Content.ToString()!);
+
+                if (selectedValue > 0)
+                {
+                    // Save value to local settings
+                    ApplicationData.Current.LocalSettings.Values["MaxParallelTasks"] = selectedValue;
+                }
+            }
+        }
+    }
+
+    [ObservableProperty]
+    private int selectedDownloadCount;
 }

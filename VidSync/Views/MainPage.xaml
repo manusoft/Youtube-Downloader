@@ -66,7 +66,7 @@
                     x:Name="SearchBox"
                     PlaceholderText="https://www.youtube.com/watch?v=RIDIBREwWBw" 
                     HorizontalAlignment="Center" 
-                    Width="500"
+                    Width="425"
                     QueryIcon="Find"
                     QuerySubmitted="SearchBox_QuerySubmitted"/>
             </StackPanel>
@@ -155,22 +155,26 @@
                                 </Viewbox>
                                 <TextBlock Text="{x:Bind AudioCodec}" VerticalAlignment="Center" Foreground="Gray"/>
                                 <Viewbox Width="14" Height="14">
-                                    <SymbolIcon Symbol="Download"/>
+                                    <SymbolIcon Symbol="Download"/>                                   
                                 </Viewbox>
+                                
                                 <TextBlock 
-                                        Text="{x:Bind ProgressText, Mode=OneWay}" 
-                                        VerticalAlignment="Center" 
-                                        Foreground="DeepSkyBlue"
-                                        Visibility="{x:Bind IsDownloading,Mode=OneWay}"/>
+                                    Text="{x:Bind ProgressText, Mode=OneWay}" 
+                                    VerticalAlignment="Center" 
+                                    Foreground="OrangeRed"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Visibility="{x:Bind IsDownloading,Mode=OneWay}"/>
                                 <TextBlock 
                                     Text="{x:Bind ProgressText, Mode=OneWay}" 
                                     VerticalAlignment="Center" 
                                     Foreground="SeaGreen"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
                                     Visibility="{x:Bind IsCompleted,Mode=OneWay}"/>
                                 <TextBlock 
                                     Text="{x:Bind ProgressText, Mode=OneWay}" 
                                     VerticalAlignment="Center" 
                                     Foreground="Red"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
                                     Visibility="{x:Bind IsError, Mode=OneWay}"/>
                             </StackPanel>
                             <StackPanel 

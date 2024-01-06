@@ -13,7 +13,7 @@ public sealed partial class MainWindow : WindowEx
         InitializeComponent();
 
         AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets/WindowIcon.ico"));
-        AppWindow.Resize(new Windows.Graphics.SizeInt32(800, 600));
+        AppWindow.Resize(new Windows.Graphics.SizeInt32(900, 700));
         Content = null;
         Title = GetVersionDescription();
 

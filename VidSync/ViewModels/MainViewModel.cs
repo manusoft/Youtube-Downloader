@@ -25,19 +25,19 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
         {
             foreach (var item in DownloadItems)
             {
-                if (item.ProgressText == "Completed" || item.ProgressText == "100%")
+                if (item.ProgressText == "COMPLETED" || item.ProgressText == "100%")
                 {
                     item.IsError = false;
                     item.IsDownloading = false;
                     item.IsCompleted = true;
-                    item.ProgressText = "Completed";
+                    item.ProgressText = "COMPLETED";
                 }
                 else
                 {
                     item.IsError = true;
                     item.IsDownloading = false;
                     item.IsCompleted = false;
-                    item.ProgressText = "Retry";
+                    item.ProgressText = "PENDING";
                 }
 
             }
@@ -145,14 +145,28 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
     {
         try
         {
-            //Use SemaphoreSlim to limit concurrent downloads
-            await downloadSemaphore.WaitAsync();
+            // Set the maximum number of parallel tasks
+            int maxParallelTasks = GetMaxProcessCount(); // Change this number based on your preference
+            SemaphoreSlim semaphoreSlim = new SemaphoreSlim(maxParallelTasks);
 
-            var downloadTasks = DownloadItems
-                .Where(item => !item.IsCompleted && !item.IsDownloading)
-                .Select(item => StartDownloadItemAsync(item));
+            // Create a list to store the running tasks
+            List<Task> runningTasks = new List<Task>();
 
-            await Task.WhenAll(downloadTasks);
+            foreach (var item in DownloadItems.Where(item => !item.IsCompleted && !item.IsDownloading))
+            {
+                // Wait for a slot in the semaphore (up to the maximum)
+                await semaphoreSlim.WaitAsync();
+
+                // Start the task and add it to the list
+                Task convertTask = StartDownloadItemAsync(item);
+                runningTasks.Add(convertTask);
+
+                // When the task completes, release the semaphore slot
+                convertTask.ContinueWith(_ => semaphoreSlim.Release());
+            }
+
+            // Wait for all running tasks to complete
+            await Task.WhenAll(runningTasks);
         }
         catch (Exception ex)
         {
@@ -165,13 +179,37 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
         }
     }
 
+    private int GetMaxProcessCount()
+    {
+        int count;
+
+        // Read value from local settings
+        object maxParallelTasksValue = ApplicationData.Current.LocalSettings.Values["MaxParallelTasks"];
+
+        // Check if the value is present and cast it to an int
+        if (maxParallelTasksValue != null && maxParallelTasksValue is int maxParallelTasks)
+        {
+            // Now 'maxParallelTasks' contains the value you stored in local settings
+            // Use it as needed in your application logic
+            count = maxParallelTasks;
+        }
+        else
+        {
+            // Save value to local settings
+            ApplicationData.Current.LocalSettings.Values["MaxParallelTasks"] = 3;
+            count = 3;
+        }
+
+        return count;
+    }
+
     private async Task StartDownloadItemAsync(DownloadItem item)
     {
         try
         {
             item.IsError = false;
             item.IsDownloading = true;
-            item.ProgressText = "Downloading...";
+            item.ProgressText = "DOWNLOADING ...";
             item.CancellationTokenSource = new CancellationTokenSource();
 
             await DownloadItemAsync(item, item.CancellationTokenSource.Token);
@@ -240,7 +278,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
             download.IsDownloading = false;
             download.IsCompleted = true;
             download.IsError = false;
-            download.ProgressText = "Completed";
+            download.ProgressText = "COMPLETED";
             SaveDownloadList();
             App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationDownloadComplete".GetLocalized(), AppContext.BaseDirectory));
         }
@@ -269,7 +307,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
                 item.IsDownloading = false;
                 item.IsCompleted = false;
                 item.IsError = true;
-                item.ProgressText = "Cancelled";
+                item.ProgressText = "CANCELLED";
             }
         }
         catch (Exception ex)
