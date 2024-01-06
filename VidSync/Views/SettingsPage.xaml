@@ -7,11 +7,11 @@
     xmlns:helpers="using:VidSync.Helpers"
     xmlns:xaml="using:Microsoft.UI.Xaml"
     mc:Ignorable="d">
-    
+
     <Page.Resources>
         <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
     </Page.Resources>
-    
+
     <Grid Padding="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="48" />
@@ -40,7 +40,7 @@
             <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
                 <TextBlock x:Uid="Settings_Theme" />
 
-                <StackPanel Margin="{StaticResource XSmallTopMargin}">
+                <StackPanel Margin="{StaticResource XSmallTopMargin}" Orientation="Horizontal">
                     <RadioButton
                         x:Uid="Settings_Theme_Light"
                         Command="{x:Bind ViewModel.SwitchThemeCommand}"
@@ -110,12 +110,50 @@
                         </HyperlinkButton.Content>
                     </HyperlinkButton>
                 </StackPanel>
+                
+                <StackPanel>
+                    <TextBlock 
+                        Text="General Settings"
+                        Margin="{StaticResource XSmallTopMargin}"
+                        Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                    <TextBlock 
+                        Text="Number of concurent downloads:"
+                        Margin="{StaticResource XSmallTopMargin}"/>
+                    <ComboBox     
+                        Margin="0,5"
+                        SelectedIndex="{x:Bind ViewModel.SelectedDownloadCount, Mode=OneWay}"
+                        SelectionChanged="{x:Bind ViewModel.OnDownloadCountComboBoxSelectionChanged}">
+                        <ComboBoxItem>1</ComboBoxItem>
+                        <ComboBoxItem>2</ComboBoxItem>
+                        <ComboBoxItem>3</ComboBoxItem>
+                        <ComboBoxItem>4</ComboBoxItem>
+                        <ComboBoxItem>5</ComboBoxItem>
+                        <ComboBoxItem>6</ComboBoxItem>
+                        <ComboBoxItem>7</ComboBoxItem>
+                        <ComboBoxItem>8</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+
                 <StackPanel Margin="{StaticResource XSmallTopMargin}" Spacing="5">
-                    <TextBlock Text="YouTube Information" Style="{ThemeResource SubtitleTextBlockStyle}" />
-                    <TextBlock Text="You're not signed in. Sign in to explore videos and channels tailored to your interests." Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}"/>
-                    <Button Content="Sign In with YouTube" Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}" Command="{x:Bind ViewModel.GotoLoginPageCommand}"/>
-                    <TextBlock Text="You're already signed in. Dive into the app and make the most of your experience!" Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}"/>
-                    <Button Content="Sign Out" Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}" Command="{x:Bind ViewModel.SignoutCommand}"/>
+                    <TextBlock 
+                        Text="YouTube Information" 
+                        Style="{ThemeResource SubtitleTextBlockStyle}" />
+                    <TextBlock 
+                        Text="You're not signed in. Sign in to explore videos and channels tailored to your interests." 
+                        Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}"/>
+                    <Button 
+                        Content="Sign In with YouTube" 
+                        Style="{StaticResource AccentButtonStyle}"
+                        Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}" 
+                        Command="{x:Bind ViewModel.GotoLoginPageCommand}"/>
+                    <TextBlock 
+                        Text="You're already signed in. Dive into the app and make the most of your experience!" 
+                        Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}"/>
+                    <Button 
+                        Content="Sign Out" 
+                        Style="{StaticResource AccentButtonStyle}"
+                        Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}" 
+                        Command="{x:Bind ViewModel.SignoutCommand}"/>
                     <TextBlock Text="{x:Bind ViewModel.Cookies.Count}"/>
                 </StackPanel>
             </StackPanel>
