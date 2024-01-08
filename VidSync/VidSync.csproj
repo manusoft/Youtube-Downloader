@@ -9,7 +9,7 @@
     <Platforms>x86;x64;arm64</Platforms>
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
-	  <Version>1.2.0</Version>	  
+	<Version>1.2.0</Version>	  
 	<ImplicitUsings>enable</ImplicitUsings>
 	<Nullable>enable</Nullable>
 	<UseWinUI>true</UseWinUI>
@@ -17,6 +17,8 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <PackageCertificateThumbprint>01F59D004E1182F5E46DD88D239300ADBDF0FA8E</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+	<UseRidGraph>true</UseRidGraph>
+	<PublishReadyToRun>false</PublishReadyToRun>
   </PropertyGroup>
 
   <ItemGroup>
