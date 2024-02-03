@@ -1,0 +1,275 @@
+﻿<Page
+    x:Name="PageMain"
+    x:Class="TubeSync.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:hlp="using:TubeSync.Helpers"
+    xmlns:m="using:TubeSync.Models"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <hlp:IntegerToVisibilityConverter x:Key="IntegerToVisibility"/>
+    </Page.Resources>
+
+    <Grid x:Name="ContentArea" Padding="0" Margin="0">
+        <Grid.Resources>
+            <ThemeShadow x:Name="BackgroundShadow"/>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid 
+            Grid.Row="0"
+            Padding="1"
+            Shadow="{StaticResource BackgroundShadow}"
+            Translation="0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Image
+                    Margin="5"
+                    Source="/Assets/vidsync.png"
+                    Height="32"
+                    Width="32"
+                    ToolTipService.ToolTip="TubeSync - Youtube video download manager"/>
+                <TextBlock 
+                    Margin="5" 
+                    Text="TubeSync" 
+                    FontSize="25" 
+                    FontWeight="Bold" 
+                    ToolTipService.ToolTip="TubeSync - Youtube video download manager">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush MappingMode="Absolute" StartPoint="0,0" EndPoint="0,20">
+                            <GradientStop Color="#fd7d32" Offset="0.0"/>
+                            <GradientStop Color="#fb6135" Offset="0.50"/>
+                            <GradientStop Color="#f94638" Offset="1"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+            </StackPanel>
+            <StackPanel
+                Grid.Column="1"
+                VerticalAlignment="Center">
+                <AutoSuggestBox 
+                    x:Name="SearchBox"
+                    PlaceholderText="https://www.youtube.com/watch?v=RIDIBREwWBw" 
+                    HorizontalAlignment="Center" 
+                    Width="425"
+                    QueryIcon="Find"
+                    QuerySubmitted="SearchBox_QuerySubmitted"/>
+            </StackPanel>
+            <StackPanel
+                Grid.Column="2"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <AppBarButton
+                    Icon="Account" 
+                    LabelPosition="Collapsed"
+                    Command="{x:Bind ViewModel.GotoLoginPageCommand}"
+                    Width="40"
+                    ToolTipService.ToolTip="Login to Youtube"/>
+                <AppBarButton 
+                    Icon="Setting" 
+                    LabelPosition="Collapsed"
+                    Command="{x:Bind ViewModel.GotoSettingsPageCommand}"
+                    Width="40"
+                    ToolTipService.ToolTip="Settings"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid 
+            Grid.Row="1"
+            Padding="-5,5,0,0">
+            <ListView
+                    x:Name="LVDownloadItems"
+                    SelectionMode="Single"
+                    ItemsSource="{x:Bind ViewModel.DownloadItems}"
+                    SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="m:DownloadItem">
+                        <Grid
+                            Margin="0,3"
+                            Padding="1"
+                            BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" 
+                            BorderThickness="0.5" 
+                            RowSpacing="0"
+                            ColumnSpacing="5"
+                            Shadow="{StaticResource BackgroundShadow}"
+                            Translation="0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Image 
+                                Grid.RowSpan="2"
+                                Source="{x:Bind Image}"
+                                Stretch="Fill"
+                                Height="50"
+                                Width="75"/>
+                            <TextBlock 
+                                Grid.Column="1"
+                                Text="{x:Bind Title}"
+                                FontWeight="SemiBold" 
+                                Style="{StaticResource BaseTextBlockStyle}"
+                                TextTrimming="CharacterEllipsis"
+                                MaxLines="1"/>
+                            <StackPanel
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Orientation="Horizontal" 
+                                Spacing="5">
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Clock"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind Duration}" Foreground="Gray" VerticalAlignment="Center"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Document"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind FileFormat}" Foreground="Orange" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind FileSize}" VerticalAlignment="Center" Foreground="DimGray"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Video"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind VideoInfo}" VerticalAlignment="Center" Foreground="Gray"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Audio"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind AudioCodec}" VerticalAlignment="Center" Foreground="Gray"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Download"/>                                   
+                                </Viewbox>
+                                
+                                <TextBlock 
+                                    Text="{x:Bind ProgressText, Mode=OneWay}" 
+                                    VerticalAlignment="Center" 
+                                    Foreground="OrangeRed"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Visibility="{x:Bind IsDownloading,Mode=OneWay}"/>
+                                <TextBlock 
+                                    Text="{x:Bind ProgressText, Mode=OneWay}" 
+                                    VerticalAlignment="Center" 
+                                    Foreground="SeaGreen"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Visibility="{x:Bind IsCompleted,Mode=OneWay}"/>
+                                <TextBlock 
+                                    Text="{x:Bind ProgressText, Mode=OneWay}" 
+                                    VerticalAlignment="Center" 
+                                    Foreground="Red"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Visibility="{x:Bind IsError, Mode=OneWay}"/>
+                            </StackPanel>
+                            <StackPanel 
+                                Orientation="Horizontal"                                
+                                Grid.Column="3"
+                                Grid.RowSpan="2"
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind IsCompleted, Mode=OneWay}">
+                                <Border BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" BorderThickness="1" Width="1" Height="40" />
+                                <AppBarButton 
+                                    x:Name="ButtonDeleteItem" 
+                                    Icon="Delete" 
+                                    LabelPosition="Collapsed" 
+                                    Width="40"                                    
+                                    ToolTipService.ToolTip="Remove"
+                                    Command="{Binding ElementName=PageMain, Path=ViewModel.DeleteItemCommand}"
+                                    CommandParameter="{Binding }"/>
+                                <AppBarButton 
+                                    x:Name="ButtonOpenFolder" 
+                                    Icon="OpenLocal" 
+                                    LabelPosition="Collapsed" 
+                                    Width="40" 
+                                    ToolTipService.ToolTip="Open Folder"
+                                    Command="{Binding ElementName=PageMain, Path=ViewModel.OpenFolderCommand}"/>
+                                <Viewbox Width="16" Height="16" Margin="5,0,10,0">
+                                    <SymbolIcon Symbol="Accept" Foreground="Green"/>
+                                </Viewbox>
+                            </StackPanel>
+                            <StackPanel 
+                                Orientation="Horizontal"                                
+                                Grid.Column="3"
+                                Grid.RowSpan="2"
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind IsError, Mode=OneWay}">
+                                <Border BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" BorderThickness="1" Width="1" Height="40" />
+                                <AppBarButton
+                                    x:Name="ButtonRetry" 
+                                    Icon="Refresh" 
+                                    LabelPosition="Collapsed" 
+                                    Width="40" 
+                                    ToolTipService.ToolTip="Retry"
+                                    Command="{Binding ElementName=PageMain, Path=ViewModel.StartDownloadCommand}"/>
+                                <AppBarButton 
+                                    x:Name="ButtonRemoveItem" 
+                                    Icon="Delete" 
+                                    LabelPosition="Collapsed" 
+                                    Width="40" 
+                                    ToolTipService.ToolTip="Remove"
+                                    Command="{Binding ElementName=PageMain, Path=ViewModel.DeleteItemCommand}"
+                                    CommandParameter="{Binding}"/>
+                                <Viewbox Width="16" Height="16" Margin="5,0,10,0">
+                                    <SymbolIcon Symbol="Clear" Foreground="Red"/>
+                                </Viewbox>
+                            </StackPanel>
+                            <StackPanel 
+                                Orientation="Horizontal"                                
+                                Grid.Column="3"
+                                Grid.RowSpan="2"
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind IsDownloading, Mode=OneWay}">
+                                <Border BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" BorderThickness="1" Width="1" Height="40" />
+                                <AppBarButton
+                                    x:Name="ButtonCancel" 
+                                    Icon="Stop" 
+                                    LabelPosition="Collapsed" 
+                                    Width="40" 
+                                    ToolTipService.ToolTip="Cancel"
+                                    Command="{Binding ElementName=PageMain, Path=ViewModel.StopDownloadCommand}"
+                                    CommandParameter="{Binding }"/>
+                            </StackPanel>
+                            <ProgressBar 
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="4"
+                                    Value="{x:Bind Progress,Mode=OneWay}"
+                                    Visibility="{x:Bind IsDownloading, Mode=OneWay}"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    Margin="2"
+                                    Foreground="Orange"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackPanel 
+                    Spacing="5"
+                    Visibility="{x:Bind ViewModel.DownloadItems.Count, Mode=OneWay, Converter={StaticResource IntegerToVisibility}}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <Image
+                     Source="/Assets/splash.png"
+                     Height="75"
+                     Width="75"/>
+                <TextBlock Text="No download tasks." HorizontalAlignment="Center" Foreground="Gray" VerticalAlignment="Center"/>
+                <TextBlock Text="Add some URL to see downloads here." HorizontalAlignment="Center" Foreground="Gray" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>
