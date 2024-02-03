@@ -1,4 +1,8 @@
-﻿namespace VidSync.Views;
+﻿
+using System.Linq;
+using Windows.ApplicationModel.DataTransfer;
+
+namespace VidSync.Views;
 
 public sealed partial class MainPage : Page
 {
@@ -21,10 +25,28 @@ public sealed partial class MainPage : Page
 
         ViewModel.VideoLink = queryText;
 
-        var result = await analyzeDialog.ShowAsync();
+        SearchBox.Text = string.Empty;
 
-        if (result == ContentDialogResult.Primary)
-        {
+        await analyzeDialog.ShowAsync();
+    }
+
+    protected override async void OnGotFocus(RoutedEventArgs e)
+    {
+        var package = Clipboard.GetContent();
+
+        if (SearchBox.Text == string.Empty)
+        {            
+            if (package.Contains(StandardDataFormats.Text))
+            {
+                var text = await package.GetTextAsync();
+
+                if (text.Contains("youtube.com"))
+                {
+                    SearchBox.Text = text;
+                    Clipboard.Clear();
+                }
+            }
+
         }
     }
 }
