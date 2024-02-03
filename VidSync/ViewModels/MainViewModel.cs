@@ -70,6 +70,8 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
             // Get highest quality muxed stream
             StreamInfo = streamManifest.GetMuxedStreams();
 
+            var highQ = StreamInfo.GetWithHighestVideoQuality();
+
             foreach (var item in StreamInfo.ToList())
             {
                 Qualities.Add(item.VideoQuality.Label);
@@ -247,7 +249,12 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
                         dispatcherQueue.TryEnqueue(() =>
                         {
                             Debug.WriteLine($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
-                            download.ProgressText = $"{progressPercentage}%";
+                            
+                            if (progressPercentage == 100)
+                                download.ProgressText = $"COMPLETED";
+                            else
+                                download.ProgressText = $"{progressPercentage}%";
+
                             download.Progress = (double)progressPercentage!;
                             ProgressChanged = Math.Round((double)progressPercentage / 100, 2);
                         });
