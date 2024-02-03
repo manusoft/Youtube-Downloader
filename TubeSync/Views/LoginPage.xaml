@@ -1,0 +1,40 @@
+﻿<Page
+    x:Class="TubeSync.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Padding="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <StackPanel
+            Orientation="Horizontal"
+            Spacing="10"            
+            Margin="0,0,0,0">
+            <AppBarButton
+                Icon="Setting" 
+                LabelPosition="Collapsed"
+                Style="{StaticResource NavigationBackButtonNormalStyle}"
+                Command="{x:Bind ViewModel.GotoBackCommand}"/>
+            <TextBlock
+                Grid.Row="0"
+                x:Uid="Login_Title"
+                Style="{StaticResource PageTitleStyle}"
+                VerticalAlignment="Top"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <WebView2 
+                x:Name="webView2"                
+                NavigationCompleted="webView2_NavigationCompleted"
+                WebMessageReceived="webView2_WebMessageReceived"
+                NavigationStarting="webView2_NavigationStarting"/>
+        </Grid>
+
+    </Grid>
+</Page>

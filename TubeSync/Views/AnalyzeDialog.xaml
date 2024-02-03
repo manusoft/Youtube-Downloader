@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="TubeSync.Views.AnalyzeDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TubeSync.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:TubeSync.Contracts.ViewModels"
+    mc:Ignorable="d"
+    Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+    CloseButtonText="Cancel"
+    PrimaryButtonText="Download"
+    IsPrimaryButtonEnabled="{x:Bind ViewModel.IsAnalyzed, Mode=OneWay}"
+    PrimaryButtonCommand="{x:Bind ViewModel.AddDownloadItemCommand}"
+    Opened="ContentDialog_Opened">
+
+    <StackPanel Spacing="5">
+        <ProgressRing 
+            Grid.ColumnSpan="2" 
+            Visibility="{x:Bind ViewModel.IsAnalyzing, Mode=OneWay}" 
+            IsIndeterminate="True" 
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Height="50"
+            Width="50"/>
+        <SymbolIcon 
+            Symbol="Clear" 
+            VerticalAlignment="Center" 
+            Foreground="Red"
+            HorizontalAlignment="Center"
+            Visibility="{x:Bind ViewModel.IsAnalyzeError, Mode=OneWay}"/>
+        <TextBlock 
+            Text="Invalid YouTube video ID or URL" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center"
+            Visibility="{x:Bind ViewModel.IsAnalyzeError, Mode=OneWay}"/>
+        <Grid ColumnSpacing="5" Visibility="{x:Bind ViewModel.IsAnalyzed, Mode=OneWay}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Image Source="{x:Bind ViewModel.VideoThumbnail, Mode=OneWay}" Width="150" MaxHeight="100"/>
+            <StackPanel Grid.Column="1" Spacing="5">
+                <TextBlock 
+                    Text="{x:Bind ViewModel.VideoTitle, Mode=OneWay}" 
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    TextWrapping="Wrap"/>
+                <TextBlock 
+                    Text="{x:Bind ViewModel.VideoDuration, Mode=OneWay}" />
+            </StackPanel>
+        </Grid>
+        <StackPanel Spacing="5" Visibility="{x:Bind ViewModel.IsAnalyzed, Mode=OneWay}" >
+            <Line Stretch="Fill" Stroke="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" X2="1" Margin="0,10" />
+            <Grid ColumnSpacing="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox 
+                    Grid.Column="0" 
+                    IsReadOnly="True"
+                    Header="Save to:" 
+                    Text="{x:Bind ViewModel.LocalPath, Mode=TwoWay}" 
+                    HorizontalContentAlignment="Stretch"/>
+                <Button Grid.Column="1" VerticalAlignment="Bottom">...</Button>
+            </Grid>
+            <ComboBox 
+                Header="Video Quality:" 
+                Width="150"
+                ItemsSource="{x:Bind ViewModel.Qualities, Mode=OneWay}"
+                SelectedItem="{x:Bind ViewModel.SelectedQuality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="(If left blank, the highest quality will be selected automatically)" Foreground="Gray"/>
+        </StackPanel>
+    </StackPanel>
+</ContentDialog>
