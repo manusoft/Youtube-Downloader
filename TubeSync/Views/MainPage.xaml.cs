@@ -33,12 +33,12 @@ public sealed partial class MainPage : Page
         var package = Clipboard.GetContent();
 
         if (SearchBox.Text == string.Empty)
-        {            
+        {
             if (package.Contains(StandardDataFormats.Text))
             {
                 var text = await package.GetTextAsync();
 
-                if (text.Contains("youtube.com"))
+                if (text.Contains("youtube.com", StringComparison.CurrentCultureIgnoreCase) || text.Contains("youtu.be", StringComparison.CurrentCultureIgnoreCase))
                 {
                     SearchBox.Text = text;
                     Clipboard.Clear();
