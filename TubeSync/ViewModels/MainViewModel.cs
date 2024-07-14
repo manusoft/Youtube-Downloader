@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using AngleSharp.Common;
+using System.Net;
 
 namespace TubeSync.ViewModels;
 
@@ -66,14 +67,23 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
             var video = await youtube.Videos.GetAsync(VideoLink);
             var streamManifest = await youtube.Videos.Streams.GetManifestAsync(VideoLink);
 
+            StreamInfo = streamManifest.Streams;
+
             // Get highest quality muxed stream
-            StreamInfo = streamManifest.GetMuxedStreams();
+            //StreamInfo = streamManifest.GetMuxedStreams();
+        
 
-            var highQ = StreamInfo.GetWithHighestVideoQuality();
+            //var highQ = StreamInfo.GetWithHighestVideoQuality();
 
-            foreach (var item in StreamInfo.ToList())
+            //foreach (var item in streams)
+            //{
+            //    Qualities.Add(item.VideoQuality.Label);
+            //}
+
+            foreach (var item in StreamInfo)
             {
-                Qualities.Add(item.VideoQuality.Label);
+                if(!Qualities.Contains(item.ToString()!))
+                    Qualities.Add(item.ToString()!);
             }
 
             ThumbnailUrl = video.Thumbnails.LastOrDefault()!.Url;
@@ -84,7 +94,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
             VideoTitle = video.Title;
             VideoDuration = video.Duration!.Value.ToString();
             VideoThumbnail = bitmap;
-            SelectedQuality = Qualities.LastOrDefault()!.ToString();
+            SelectedQuality = StreamInfo.TryGetWithHighestBitrate()!.ToString()!;
             IsAnalyzed = true;
         }
         catch (Exception ex)
@@ -110,26 +120,35 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
 
         try
         {
-            var videoPlayerStream = StreamInfo!.First(video => video.VideoQuality.Label == SelectedQuality);
-
-            DownloadItem downloadItem = new DownloadItem()
+            if(StreamInfo != null)
             {
-                Id = VideoId,
-                Title = VideoTitle,
-                Duration = VideoDuration,
-                ImageUrl = ThumbnailUrl,
-                AudioCodec = videoPlayerStream.AudioCodec,
-                FileFormat = videoPlayerStream.Container.Name,
-                FileSize = $"{Math.Round(videoPlayerStream.Size.MegaBytes, 1)}MB",
-                VideoCodec = videoPlayerStream.VideoCodec,
-                VideoInfo = $"{videoPlayerStream.VideoResolution.Width}x{videoPlayerStream.VideoResolution.Height} {videoPlayerStream.VideoQuality.Framerate}fps",
-                RemoteUrl = videoPlayerStream.Url,
-                LocalPath = AppContants.DownloadPath,
-                CreatedAt = DateTime.Now,
-                CancellationTokenSource = new CancellationTokenSource(),
-            };
+                foreach (var item in StreamInfo)
+                {
+                  
+                    if(item.ToString() == SelectedQuality)
+                    {
+                        DownloadItem downloadItem = new DownloadItem()
+                        {
+                            Id = VideoId,
+                            Title = VideoTitle,
+                            Duration = VideoDuration,
+                            ImageUrl = ThumbnailUrl,
+                            Bitrate = item.Bitrate.ToString(),
+                            FileFormat = item.Container.Name,
+                            FileSize = $"{Math.Round(item.Size.MegaBytes, 1)}MB",
+                            IsAudioOnly = item.Container.IsAudioOnly,
+                            VideoInfo = SelectedQuality,
+                            RemoteUrl = item.Url,
+                            LocalPath = AppContants.DownloadPath,
+                            CreatedAt = DateTime.Now,
+                            CancellationTokenSource = new CancellationTokenSource(),
+                        };
 
-            DownloadItems.Insert(0, downloadItem); //Add(downloadItem);
+                        if (!DownloadItems.Any(x => x.Id == VideoId))
+                            DownloadItems.Insert(0, downloadItem); //Add(downloadItem);
+                    }
+                }
+            }           
 
             SaveDownloadList();
 
@@ -231,7 +250,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
 
             var saveFileName = PathExtension.ConvertToValidFileName(download.Title);
 
-            var destinationFilePath = $"{AppContants.DownloadPath}\\{saveFileName}.mp4";
+            var destinationFilePath = $"{AppContants.DownloadPath}\\{saveFileName}.{download.FileFormat}";
 
             download.LocalPath = destinationFilePath;
 
@@ -496,7 +515,7 @@ public partial class MainViewModel : BaseViewModel, INavigationAware
     private string videoDuration = string.Empty;
 
     [ObservableProperty]
-    private IEnumerable<MuxedStreamInfo>? streamInfo;
+    private IEnumerable<IStreamInfo>? streamInfo;
 
     [ObservableProperty]
     private string selectedQuality = "720p";

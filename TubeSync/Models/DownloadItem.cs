@@ -5,11 +5,11 @@ public class DownloadItem : ObservableObject
     public string Id { get; set; }
     public string Title { get; set; }
     public string Duration { get; set; }
-    public string AudioCodec { get; set; }
+    public string Bitrate { get; set; }
     public string FileSize { get; set; }
     public string FileFormat { get; set; }
-    public string VideoCodec { get; set; }
     public string VideoInfo { get; set; }
+    public bool IsAudioOnly { get; set; }
     public string RemoteUrl { get; set; }
     public string LocalPath { get; set; }
     public string ImageUrl { get; set; }
