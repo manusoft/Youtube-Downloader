@@ -151,9 +151,13 @@
                                 </Viewbox>
                                 <TextBlock Text="{x:Bind VideoInfo}" VerticalAlignment="Center" Foreground="Gray"/>
                                 <Viewbox Width="14" Height="14">
-                                    <SymbolIcon Symbol="Audio"/>
+                                    <SymbolIcon Symbol="Volume"/>
                                 </Viewbox>
-                                <TextBlock Text="{x:Bind AudioCodec}" VerticalAlignment="Center" Foreground="Gray"/>
+                                <TextBlock Text="{x:Bind IsAudioOnly}" VerticalAlignment="Center" Foreground="Gray"/>
+                                <Viewbox Width="14" Height="14">
+                                    <SymbolIcon Symbol="Camera"/>
+                                </Viewbox>
+                                <TextBlock Text="{x:Bind Bitrate}" VerticalAlignment="Center" Foreground="Gray"/>
                                 <Viewbox Width="14" Height="14">
                                     <SymbolIcon Symbol="Download"/>                                   
                                 </Viewbox>
