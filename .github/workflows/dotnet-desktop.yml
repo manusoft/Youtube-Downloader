@@ -49,4 +49,5 @@ jobs:
       with:
         name: msix-package-$(matrix.platform)
         path: |
-          **/bin/Release/net8.0-windows10.0.19041.0/win-x64/publish/*.msix
+          echo "Listing publish directory:"
+          ls D:\a\youtube-downloader-desktop\youtube-downloader-desktop\TubeSync\bin\Release\net8.0-windows10.0.19041.0\win-x64\publish\
