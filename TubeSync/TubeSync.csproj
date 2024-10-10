@@ -11,7 +11,7 @@
 	<!--<RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>-->
 	<!-- Specify a default RuntimeIdentifier (win-x64 for example) -->
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	<PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
+	<PublishProfile>Properties\PublishProfiles\FolderProfile.pubxml</PublishProfile>
 	<Version>1.2.0</Version>
 	<ImplicitUsings>enable</ImplicitUsings>
 	<Nullable>enable</Nullable>
