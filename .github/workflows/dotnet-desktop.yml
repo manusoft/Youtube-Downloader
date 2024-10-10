@@ -33,11 +33,11 @@ jobs:
 
     # 5. Build the specific WinUI 3 project with the platform specified x64
     - name: Build Solution
-      run: dotnet build TubeSync/TubeSync.csproj --configuration Release -r win-$(x64)
+      run: dotnet build TubeSync/TubeSync.csproj --configuration Release -r win-x64
 
     # 6. Package the app into MSIX for the platform
     - name: Package MSIX
-      run: dotnet publish TubeSync/TubeSync.csproj --configuration Release -r win-$(x64)
+      run: dotnet publish TubeSync/TubeSync.csproj --configuration Release -r win-x64
 
     # 7. Upload MSIX artifact for the platform
     - name: Upload MSIX
