@@ -49,4 +49,4 @@ jobs:
       with:
         name: msix-package-$(matrix.platform)
         path: |
-          **/bin/Release/net8.0-windows10.0.19041.0/win-$(matrix.platform)/*.msix
+          **/bin/Release/Publish/*.msix
