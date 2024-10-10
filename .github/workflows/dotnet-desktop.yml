@@ -21,23 +21,23 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.x' # Adjust the version as needed
+        dotnet-version: '8.x'
 
-    # 3. Install NuGet CLI (optional but good for cache restore)
+    # 3. Install NuGet CLI
     - name: Install NuGet CLI
       uses: NuGet/setup-nuget@v1
 
-    # 4. Restore NuGet packages for the specific project/solution
+    # 4. Restore NuGet packages for the specific project
     - name: Restore NuGet Packages
-      run: dotnet restore TubeSync/TubeSync.csproj
+      run: dotnet restore src/TubeSync/TubeSync.csproj
 
     # 5. Build the specific WinUI 3 project
     - name: Build Solution
-      run: dotnet build TubeSync/TubeSync.csproj --configuration Release
+      run: dotnet build src/TubeSync/TubeSync.csproj --configuration Release
 
-    # 6. Package the app into MSIX
+    # 6. Package the app into MSIX with Self-Contained option and explicit architecture
     - name: Package MSIX
-      run: dotnet publish TubeSync/TubeSync.csproj --configuration Release
+      run: dotnet publish src/TubeSync/TubeSync.csproj --configuration Release -r win-x64 -p:WindowsAppSDKSelfContained=True
 
     # 7. Upload MSIX artifact
     - name: Upload MSIX
