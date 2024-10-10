@@ -38,12 +38,8 @@ jobs:
     # 6. Package the app into MSIX for the platform
     - name: Package MSIX
       run: dotnet publish TubeSync/TubeSync.csproj --configuration Release -r win-x64 -o publish
-
-    - name: List Publish Directory
-      run: |
-          echo "Listing publish directory:"
-          dir publish
-
+    
+    # 7. Upload MSIX  to Articraft
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with:
