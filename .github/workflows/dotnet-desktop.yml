@@ -44,4 +44,5 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: msix-package-x64
-        path: publish/*.msix
+        path: |
+          **/bin/Release/Publish/*.msix
