@@ -3,14 +3,18 @@ name: Build WinUI 3 Application
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build:
     runs-on: windows-latest
+
+    strategy:
+      matrix:
+        platform: [x64, x86, arm64]
 
     steps:
     # 1. Checkout the code
@@ -31,18 +35,18 @@ jobs:
     - name: Restore NuGet Packages
       run: dotnet restore TubeSync/TubeSync.csproj
 
-    # 5. Build the specific WinUI 3 project
+    # 5. Build the specific WinUI 3 project with the platform specified in the matrix
     - name: Build Solution
-      run: dotnet build TubeSync/TubeSync.csproj --configuration Release
+      run: dotnet build TubeSync/TubeSync.csproj --configuration Release -r win-$(matrix.platform)
 
-    # 6. Package the app into MSIX without Self-Contained option
+    # 6. Package the app into MSIX for the platform
     - name: Package MSIX
-      run: dotnet publish TubeSync/TubeSync.csproj --configuration Release
+      run: dotnet publish TubeSync/TubeSync.csproj --configuration Release -r win-$(matrix.platform)
 
-    # 7. Upload MSIX artifact
+    # 7. Upload MSIX artifact for the platform
     - name: Upload MSIX
       uses: actions/upload-artifact@v3
       with:
-        name: msix-package
+        name: msix-package-$(matrix.platform)
         path: |
-          **/bin/Release/net8.0-windows10.0.19041.0/*.msix
+          **/bin/Release/net8.0-windows10.0.19041.0/win-$(matrix.platform)/*.msix
