@@ -29,7 +29,7 @@ jobs:
 
     # 4. Restore NuGet packages for the specific project
     - name: Restore NuGet Packages
-      run: dotnet restore src/TubeSync/TubeSync.csproj
+      run: dotnet restore TubeSync/TubeSync.csproj
 
     # 5. Build the specific WinUI 3 project
     - name: Build Solution
