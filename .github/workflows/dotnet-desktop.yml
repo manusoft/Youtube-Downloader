@@ -37,7 +37,7 @@ jobs:
 
     # 6. Package the app into MSIX
     - name: Package MSIX
-      run: dotnet publish TubeSync/TubeSync.csproj --configuration Release -p:WindowsAppSDKSelfContained=True
+      run: dotnet publish TubeSync/TubeSync.csproj --configuration Release
 
     # 7. Upload MSIX artifact
     - name: Upload MSIX
