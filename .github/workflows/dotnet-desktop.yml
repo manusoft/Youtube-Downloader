@@ -35,9 +35,9 @@ jobs:
     - name: Build Solution
       run: dotnet build TubeSync/TubeSync.csproj --configuration Release
 
-    # 6. Package the app into MSIX with Self-Contained option and explicit architecture
+    # 6. Package the app into MSIX without Self-Contained option
     - name: Package MSIX
-      run: dotnet publish TubeSync/TubeSync.csproj --configuration Release -r win-x64 -p:WindowsAppSDKSelfContained=True
+      run: dotnet publish TubeSync/TubeSync.csproj --configuration Release
 
     # 7. Upload MSIX artifact
     - name: Upload MSIX
