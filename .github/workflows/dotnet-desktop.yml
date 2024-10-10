@@ -43,7 +43,5 @@ jobs:
     - name: Upload MSIX
       uses: actions/upload-artifact@v3
       with:
-        name: msix-package-$(x64)
-        path: |
-          echo "Listing publish directory:"
-          ls D:\a\youtube-downloader-desktop\youtube-downloader-desktop\TubeSync\bin\Release\net8.0-windows10.0.19041.0\win-x64\publish\
+        name: msix-package-x64
+        path: publish/*.msix
