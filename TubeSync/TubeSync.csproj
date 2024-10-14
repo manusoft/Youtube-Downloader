@@ -18,10 +18,11 @@
 	<UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
-    <PackageCertificateThumbprint>01F59D004E1182F5E46DD88D239300ADBDF0FA8E</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>2A81F5D485E865FBF4339677336C0E4FABB2D2AB</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
 	<UseRidGraph>true</UseRidGraph>
 	<PublishReadyToRun>false</PublishReadyToRun>
+	<PackageCertificateKeyFile>TubeSync_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
 	
   <ItemGroup>
