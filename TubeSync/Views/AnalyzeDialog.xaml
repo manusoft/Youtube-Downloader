@@ -10,6 +10,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
     CloseButtonText="Cancel"
+    CloseButtonStyle="{StaticResource WindowChromeStyle}"
     PrimaryButtonText="Download"
     IsPrimaryButtonEnabled="{x:Bind ViewModel.IsAnalyzed, Mode=OneWay}"
     PrimaryButtonCommand="{x:Bind ViewModel.AddDownloadItemCommand}"

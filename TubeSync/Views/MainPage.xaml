@@ -242,7 +242,7 @@
                                 <Border BorderBrush="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}" BorderThickness="1" Width="1" Height="40" />
                                 <AppBarButton
                                     x:Name="ButtonCancel" 
-                                    Icon="Stop" 
+                                    Icon="Stop"                                     
                                     LabelPosition="Collapsed" 
                                     Width="40" 
                                     ToolTipService.ToolTip="Cancel"
